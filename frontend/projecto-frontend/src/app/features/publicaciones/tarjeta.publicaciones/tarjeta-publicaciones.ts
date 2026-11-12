@@ -2,11 +2,12 @@ import { Component, inject, input, output } from '@angular/core';
 import { PublicacionesService } from '../../../core/service/publicacionservice/publicacionservice';
 import { AuthService } from '../../../core/service/authservice/authservice';
 import { DatePipe } from '@angular/common';
+import { ImagenUrlPipe } from '../../../pipes/imagen-url-pipe';
 
 @Component({
   selector: 'app-tarjeta-publicaciones',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe,ImagenUrlPipe],
   styleUrl: './tarjeta-publicaciones.css',
   templateUrl: './tarjeta-publicaciones.html',
 })

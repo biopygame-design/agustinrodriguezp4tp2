@@ -8,7 +8,7 @@
   <!-- 🔹 Tarjeta de Datos Personales y Foto -->
   <div class="perfil-card" *ngIf="usuarioData() as user">
     <div class="avatar-container">
-      <img [src]="user.imagenPerfil ? 'http://localhost:3000' + user.imagenPerfil : 'assets/default-avatar.png'" 
+      <img [src]="user.imagenPerfil | imagenUrl:'perfil'" 
            alt="Foto de perfil" 
            class="perfil-img">
     </div>
@@ -18,7 +18,7 @@
       <h2>{{ user.nombre }} {{ user.apellido || '' }}</h2>
       
       <!-- Nombre de usuario / Arroba -->
-      <p class="username" *ngIf="user.nombre_usuario">&#64;{{ user.nombre_usuario }}</p>
+      <p class="username" *ngIf="user.nombre_usuario">@{{ user.nombre_usuario }}</p>
       
       <!-- Correo -->
       <p class="email"><strong>Correo:</strong> {{ user.correo }}</p>
@@ -47,7 +47,7 @@
       <p class="post-content">{{ post.descripcion }}</p>
       
       <div class="post-image-container" *ngIf="post.imagen_publicacion">
-        <img [src]="'http://localhost:3000/uploads/' + post.imagen_publicacion" 
+        <img [src]="post.imagen_publicacion | imagenUrl:'post'" 
              alt="Imagen del post" 
              class="post-img">
       </div>
@@ -63,7 +63,7 @@
         </div>
 
         <div class="comentario-item" *ngFor="let comentario of post.comentarios">
-          <span class="comentario-autor">&#64;{{ comentario.usuario?.nombre_usuario || comentario.usuario?.nombre || 'Usuario' }}:</span>
+          <span class="comentario-autor">@{{ comentario.usuario?.nombre_usuario || comentario.usuario?.nombre || 'Usuario' }}:</span>
           <span class="comentario-texto">{{ comentario.texto }}</span>
         </div>
       </div>

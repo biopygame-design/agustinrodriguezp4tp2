@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { AuthService } from '../../core/service/authservice/authservice'; // Ajusta la ruta a tu AuthService si es diferente
+import { AuthService } from '../../core/service/authservice/authservice';
+import { ImagenUrlPipe } from '../../pipes/imagen-url-pipe'; // Ajusta la ruta a tu AuthService si es diferente
 
 @Component({
   selector: 'app-miperfil',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink,ImagenUrlPipe],
   templateUrl: './miperfil.html', // 👈 Apuntando correctamente a tu archivo miperfil.html
   styleUrl: './miperfil.css'
 })
