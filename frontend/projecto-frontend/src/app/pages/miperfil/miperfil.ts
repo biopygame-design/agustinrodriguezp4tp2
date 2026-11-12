@@ -41,9 +41,9 @@ export class MiPerfilComponent implements OnInit {
   async cargarDatosPerfil(id: string) {
     try {
       this.isLoading.set(true);
-      
+
       const response: any = await firstValueFrom(
-        this.http.get(`http://localhost:3000/api/publicaciones/perfil/${id}`)
+        this.http.get(`https://agustinrodriguezp4tp2.onrender.com/api/publicaciones/perfil/${id}`)
       );
 
       // Guardamos la info en los signals
