@@ -1,4 +1,6 @@
 {
+  "framework": "angular",
+  "outputDirectory": "dist/projecto-frontend/browser",
   "rewrites": [
     {
       "source": "/(.*)",
