@@ -8,7 +8,11 @@ async function bootstrap() {
 
   // 🔓 Habilitar CORS para permitir peticiones desde Angular (puerto 4200)
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: [
+    'http://localhost:4200',
+    'https://agustinrodriguezp4tp2.vercel.app'
+  ],
+    
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
