@@ -1,0 +1,148 @@
+/* Contenedor principal centrado */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f6f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px 0;
+}
+
+/* Tarjeta del formulario de registro */
+form {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Título */
+form h2 {
+  margin-bottom: 20px;
+  color: #333333;
+  text-align: center;
+  font-size: 24px;
+}
+
+/* Agrupador de campos */
+.form-group {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inputs, textareas y selects */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+textarea,
+select.form-select {
+  padding: 10px 14px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #4f46e5;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* Etiquetas pequeñas */
+.form-label, .file-label, .form-label-small {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555555;
+  margin-bottom: 5px;
+}
+
+/* Input file custom */
+input[type="file"] {
+  font-size: 13px;
+  color: #555;
+  padding: 5px 0;
+}
+
+/* Texto de error por campo */
+.error-text {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Botón de envío */
+button[type="submit"] {
+  background-color: #4f46e5;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #4338ca;
+}
+
+button[type="submit"]:disabled {
+  background-color: #a5b4fc;
+  cursor: not-allowed;
+}
+
+/* Alertas globales de error y éxito */
+.alert-error {
+  margin-top: 14px;
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.alert-success {
+  margin-top: 14px;
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Redirección al login */
+.redirect-text {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 14px;
+  color: #666666;
+}
+
+.redirect-text a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.redirect-text a:hover {
+  text-decoration: underline;
+}

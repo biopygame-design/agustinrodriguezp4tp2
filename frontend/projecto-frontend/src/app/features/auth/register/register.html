@@ -1,0 +1,73 @@
+<div class="auth-container">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <h2>Crear Cuenta</h2>
+
+    <div class="form-group">
+      <input type="text" formControlName="nombre" placeholder="Nombre">
+    </div>
+
+    <div class="form-group">
+      <input type="text" formControlName="apellido" placeholder="Apellido">
+    </div>
+
+    <div class="form-group">
+      <input type="email" formControlName="correo" placeholder="Correo electrónico">
+    </div>
+
+    <div class="form-group">
+      <input type="text" formControlName="nombre_usuario" placeholder="Nombre de usuario">
+    </div>
+
+    <div class="form-group">
+      <input type="password" formControlName="password" placeholder="Contraseña (mín. 8 caracteres)">
+    </div>
+
+    <!-- NUEVO: Campo Repetir Contraseña -->
+    <div class="form-group">
+      <input type="password" formControlName="repetir_password" placeholder="Repetir contraseña">
+      @if (registerForm.errors?.['passwordMismatch'] && registerForm.get('repetir_password')?.touched) {
+        <small class="error-text">Las contraseñas no coinciden</small>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="fecha_nacimiento" class="form-label-small">Fecha de nacimiento</label>
+      <input type="date" id="fecha_nacimiento" formControlName="fecha_nacimiento">
+    </div>
+
+    <div class="form-group">
+      <textarea formControlName="descripcion_breve" placeholder="Descripción breve (opcional)"></textarea>
+    </div>
+    
+    <!-- Selector de tipo de cuenta -->
+    <div class="form-group">
+      <label for="rol" class="form-label">Tipo de cuenta</label>
+      <select id="rol" formControlName="rol" class="form-select">
+        <option value="usuario">Usuario</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+
+    <!-- Campo tipo file -->
+    <div class="form-group file-group">
+      <label class="file-label">Foto de perfil</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*">
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid || isLoading()">
+      {{ isLoading() ? 'Registrando...' : 'Registrarse' }}
+    </button>
+
+    @if (errorMessage()) {
+      <div class="alert-error">{{ errorMessage() }}</div>
+    }
+    @if (successMessage()) {
+      <div class="alert-success">{{ successMessage() }}</div>
+    }
+
+    <!-- Enlace para ir al Login -->
+    <p class="redirect-text">
+      ¿Ya tenés cuenta? <a routerLink="/login">Iniciá sesión</a>
+    </p>
+  </form>
+</div>

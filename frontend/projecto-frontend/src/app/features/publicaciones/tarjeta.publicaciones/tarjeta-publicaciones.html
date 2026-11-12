@@ -1,0 +1,30 @@
+<div class="tarjeta-publicacion">
+  <!-- Cabecera de la publicación -->
+  <div class="header">
+    <strong>@{{ post().usuario?.nombre || 'Usuario' }}</strong>
+    <span class="fecha">{{ post().createdAt | date:'short' }}</span>
+  </div>
+
+  <!-- Contenido de texto -->
+  <h4>{{ post().titulo }}</h4>
+  <p>{{ post().descripcion }}</p>
+
+  <!-- 🖼️ 👇 AQUÍ AGREGAS LA IMAGEN SI EL POST TIENE UNA -->
+  @if (post().imagen_publicacion) {
+  <div class="imagen-container">
+    <!-- 👇 Agrega '/uploads/' antes del nombre del archivo -->
+    <img [src]="'http://localhost:3000/uploads/' + post().imagen_publicacion" alt="Imagen de la publicación" class="post-img" style="max-width: 100%; height: auto; border-radius: 8px;" />
+  </div>
+}
+
+  <!-- Botones de Acción -->
+  <div class="acciones">
+    <button (click)="darLike()">❤️ Me gusta ({{ post().me_gusta?.length || 0 }})</button>
+    
+    
+    @if (puedeEliminar()) {
+      <button (click)="eliminar()" class="btn-eliminar">🗑️ Eliminar</button>
+    }
+  </div>
+
+</div>

@@ -1,0 +1,194 @@
+/* Contenedor general del muro */
+.muro-container {
+  max-width: 650px;
+  margin: 30px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #0f1419;
+}
+
+/* Título principal del muro */
+.muro-container > h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #111;
+}
+
+/* Barra de navegación superior (Mi Perfil / Cerrar Sesión) */
+.acciones-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.btn-perfil, .btn-logout {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #cfd9de;
+}
+
+.btn-perfil {
+  background-color: #f7f9f9;
+  color: #0f1419;
+}
+
+.btn-perfil:hover {
+  background-color: #eff3f4;
+}
+
+.btn-logout {
+  background-color: #fff;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.btn-logout:hover {
+  background-color: #fee2e2;
+}
+
+/* 1️⃣ Tarjeta para crear publicación */
+.crear-post-card {
+  background: #ffffff;
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.crear-post-card h3 {
+  font-size: 18px;
+  margin-bottom: 14px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.input-field, .textarea-field {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.input-field:focus, .textarea-field:focus {
+  border-color: #4f46e5;
+}
+
+.textarea-field {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.file-group {
+  font-size: 13px;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.file-group input[type="file"] {
+  padding: 4px 0;
+}
+
+/* Botón principal de Publicar */
+.btn-publicar {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.btn-publicar:hover:not(:disabled) {
+  background-color: #4338ca;
+}
+
+.btn-publicar:disabled {
+  background-color: #a5b4fc;
+  cursor: not-allowed;
+}
+
+/* 2️⃣ Sección de Ordenamiento */
+.ordenamiento-container {
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+}
+
+.select-orden {
+  background-color: #fff;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* 3️⃣ Sección de Publicaciones recientes y Paginación */
+.publicaciones-recientes > h3 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 30px;
+  background: #f8fafc;
+  border-radius: 8px;
+  color: #64748b;
+}
+
+/* Botones de Paginación */
+.paginacion-container {
+  background: #ffffff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-top: 20px;
+}
+
+.btn-paginacion {
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-paginacion:hover:not(:disabled) {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.btn-paginacion:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,80 @@
+<div class="perfil-container" *ngIf="!isLoading(); else cargando">
+  
+  <!-- 🔹 Botón de Retorno -->
+  <div class="perfil-nav">
+    <a routerLink="/publicaciones" class="btn-volver">← Volver al Muro</a>
+  </div>
+
+  <!-- 🔹 Tarjeta de Datos Personales y Foto -->
+  <div class="perfil-card" *ngIf="usuarioData() as user">
+    <div class="avatar-container">
+      <img [src]="user.imagenPerfil ? 'http://localhost:3000' + user.imagenPerfil : 'assets/default-avatar.png'" 
+           alt="Foto de perfil" 
+           class="perfil-img">
+    </div>
+    
+    <div class="perfil-info">
+      <!-- Nombre y Apellido -->
+      <h2>{{ user.nombre }} {{ user.apellido || '' }}</h2>
+      
+      <!-- Nombre de usuario / Arroba -->
+      <p class="username" *ngIf="user.nombre_usuario">&#64;{{ user.nombre_usuario }}</p>
+      
+      <!-- Correo -->
+      <p class="email"><strong>Correo:</strong> {{ user.correo }}</p>
+      
+      <!-- Descripción o Bio -->
+      <p class="bio"><strong>Acerca de mí:</strong> {{ user.descripcion_breve || 'Sin descripción disponible.' }}</p>
+      
+      <!-- Fecha de Nacimiento -->
+      <p class="birth" *ngIf="user.fecha_nacimiento">
+        <strong>Fecha de Nacimiento:</strong> {{ user.fecha_nacimiento | date:'dd/MM/yyyy' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- 🔹 Sección de las Últimas 3 Publicaciones -->
+  <div class="mis-publicaciones-section">
+    <h3>Mis Últimas 3 Publicaciones</h3>
+
+    <div *ngIf="ultimasPublicaciones().length === 0" class="no-posts">
+      <p>No tenés publicaciones realizadas todavía.</p>
+    </div>
+
+    <!-- Bucle para recorrer las publicaciones -->
+    <div class="post-card" *ngFor="let post of ultimasPublicaciones()">
+      <h4 class="post-title">{{ post.titulo }}</h4>
+      <p class="post-content">{{ post.descripcion }}</p>
+      
+      <div class="post-image-container" *ngIf="post.imagen_publicacion">
+        <img [src]="'http://localhost:3000/uploads/' + post.imagen_publicacion" 
+             alt="Imagen del post" 
+             class="post-img">
+      </div>
+      
+      <span class="post-date">{{ post.createdAt | date:'medium' }}</span>
+
+      <!-- Sub-sección de Comentarios -->
+      <div class="comentarios-container">
+        <h5>Comentarios</h5>
+        
+        <div *ngIf="!post.comentarios || post.comentarios.length === 0" class="no-comments">
+          <p>Sin comentarios en esta publicación.</p>
+        </div>
+
+        <div class="comentario-item" *ngFor="let comentario of post.comentarios">
+          <span class="comentario-autor">&#64;{{ comentario.usuario?.nombre_usuario || comentario.usuario?.nombre || 'Usuario' }}:</span>
+          <span class="comentario-texto">{{ comentario.texto }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Template de carga -->
+<ng-template #cargando>
+  <div class="loading-spinner">
+    <p>Cargando información del perfil...</p>
+  </div>
+</ng-template>

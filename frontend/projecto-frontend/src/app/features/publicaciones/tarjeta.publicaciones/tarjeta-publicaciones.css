@@ -1,0 +1,114 @@
+/* Tarjeta contenedora principal estilo feed */
+.tarjeta-publicacion {
+  background: #ffffff;
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: box-shadow 0.2s ease;
+}
+
+.tarjeta-publicacion:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Cabecera (Autor y Fecha) */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.header strong {
+  color: #0f1419;
+  font-size: 15px;
+}
+
+.fecha {
+  color: #536471;
+  font-size: 13px;
+}
+
+/* Título y Descripción */
+.tarjeta-publicacion h4 {
+  margin: 0 0 8px 0;
+  color: #0f1419;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tarjeta-publicacion p {
+  margin: 0 0 14px 0;
+  color: #333333;
+  font-size: 15px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* Contenedor de la Imagen */
+.imagen-container {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f7f9f9;
+  display: flex;
+  justify-content: center;
+}
+
+.post-img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* Zona de Botones de Acción */
+.acciones {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid #eff3f4;
+  padding-top: 12px;
+  margin-top: 8px;
+}
+
+/* Botón general (Me gusta) */
+.acciones button {
+  background-color: #f7f9f9;
+  border: 1px solid #cfd9de;
+  color: #536471;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.acciones button:hover {
+  background-color: #fee2e2; /* Un leve tono rojizo al pasar por el like */
+  color: #e0245e;
+  border-color: #f9d9d9;
+}
+
+/* Botón específico de Eliminar */
+.btn-eliminar {
+  margin-left: auto; /* Lo empuja totalmente hacia la derecha */
+  background-color: #fff !important;
+  border-color: #fca5a5 !important;
+  color: #dc2626 !important;
+}
+
+.btn-eliminar:hover {
+  background-color: #fee2e2 !important;
+  border-color: #dc2626 !important;
+  color: #b91c1c !important;
+}

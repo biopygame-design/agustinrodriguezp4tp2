@@ -1,0 +1,168 @@
+/* Contenedor principal de la vista de perfil */
+.perfil-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* 🔹 Botón de Retorno */
+.perfil-nav {
+  margin-bottom: 1.5rem;
+}
+
+.btn-volver {
+  text-decoration: none;
+  color: #0066cc;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.btn-volver:hover {
+  color: #004080;
+  text-decoration: underline;
+}
+
+/* 🔹 Tarjeta de Datos Personales y Foto */
+.perfil-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  border: 1px solid #eaeaea;
+}
+
+/* Diseño responsivo para pantallas pequeñas */
+@media (max-width: 600px) {
+  .perfil-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* Contenedor y estilos de la foto de perfil */
+.avatar-container {
+  flex-shrink: 0;
+}
+
+.perfil-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Información del usuario */
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.perfil-info h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #111;
+}
+
+.username {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.email, .bio, .birth {
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* 🔹 Sección de Publicaciones */
+.mis-publicaciones-section h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1.2rem;
+  color: #222;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 0.5rem;
+}
+
+.no-posts, .no-comments {
+  color: #777;
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+/* Tarjeta individual de cada publicación */
+.post-card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  border: 1px solid #eaeaea;
+}
+
+.post-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+}
+
+.post-content {
+  margin: 0 0 0.8rem 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.post-date {
+  font-size: 0.85rem;
+  color: #888;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* 🔹 Sub-sección de Comentarios */
+.comentarios-container {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  border-left: 3px solid #0066cc;
+}
+
+.comentarios-container h5 {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.comentario-item {
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.comentario-autor {
+  font-weight: 600;
+  color: #0066cc;
+  margin-right: 0.4rem;
+}
+
+.comentario-texto {
+  color: #444;
+}
+
+/* 🔹 Estado de carga */
+.loading-spinner {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.1rem;
+  color: #666;
+}
