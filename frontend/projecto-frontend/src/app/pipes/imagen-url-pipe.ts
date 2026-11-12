@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true
 })
 export class ImagenUrlPipe implements PipeTransform {
-  private readonly baseUrl = 'https://agustinrodriguezp4tp2.onrender.com/api';
+  private readonly baseUrl = 'https://agustinrodriguezp4tp2.onrender.com';
 
   transform(ruta: string | null | undefined, tipo: 'perfil' | 'post' = 'post'): string {
     if (!ruta) {
