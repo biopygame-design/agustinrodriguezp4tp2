@@ -9,7 +9,7 @@ export class AuthService {
   private http = inject(HttpClient);
   
   // URL base de tu backend en NestJS
-  private apiUrl = 'http://localhost:3000/api/auth'; 
+  private apiUrl = 'https://agustinrodriguezp4tp2.onrender.com/api/auth'; 
 
   // Signals para manejar el estado igual que en tu código anterior
   currentUserData = signal<any | null>(null);

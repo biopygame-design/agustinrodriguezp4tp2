@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class PublicacionesService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/publicaciones';
+  private apiUrl = 'https://agustinrodriguezp4tp2.onrender.com/api/publicaciones';
 
   // 👇 Actualizado para recibir el parámetro 'orden' y enviarlo al backend
   listarPublicaciones(orden: string = 'fecha', limit: number = 5, offset: number = 0): Observable<any[]> {
