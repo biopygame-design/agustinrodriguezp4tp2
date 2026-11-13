@@ -51,7 +51,7 @@ export class PublicacionesService {
       .exec();
   }
 
-  // 🔍 NUEVO: Obtener una publicación individual por ID
+  // 🔍 Obtener una publicación individual por ID
   async obtenerPorId(id: string) {
     if (!Types.ObjectId.isValid(id)) {
       throw new NotFoundException('ID de publicación inválido');
@@ -70,7 +70,7 @@ export class PublicacionesService {
     return publicacion;
   }
 
-  // 💬 NUEVO: Obtener comentarios paginados de una publicación
+  // 💬 Obtener comentarios paginados de una publicación
   async obtenerComentarios(postId: string, limitStr?: string, offsetStr?: string) {
     if (!Types.ObjectId.isValid(postId)) {
       throw new NotFoundException('ID de publicación inválido');
@@ -97,20 +97,19 @@ export class PublicacionesService {
 
     const comentarios = resultado[0].comentarios || [];
 
-    // Poblamos los datos del usuario dentro de cada comentario
     return await this.publicacionModel.populate(comentarios, {
       path: 'usuario',
       select: '-contrasena'
     });
   }
 
-  // ✍️ NUEVO: Agregar un comentario a una publicación
+  // ✍️ Agregar un comentario (Tipado como `any` para evitar conflictos de TypeScript en el build)
   async agregarComentario(postId: string, usuarioId: string, texto: string) {
     if (!Types.ObjectId.isValid(postId) || !Types.ObjectId.isValid(usuarioId)) {
       throw new NotFoundException('IDs inválidos');
     }
 
-    const publicacion = await this.publicacionModel.findById(postId);
+    const publicacion: any = await this.publicacionModel.findById(postId);
     if (!publicacion || publicacion.activo === false) {
       throw new NotFoundException('Publicación no encontrada');
     }
@@ -127,11 +126,9 @@ export class PublicacionesService {
       editado: false
     };
 
-    // Agregamos al inicio del array para que el más nuevo quede arriba
-    publicacion.comentarios.unshift(nuevoComentario as any);
+    publicacion.comentarios.unshift(nuevoComentario);
     await publicacion.save();
 
-    // Poblamos el usuario del comentario recién creado para retornarlo completo al frontend
     await this.publicacionModel.populate(publicacion, {
       path: 'comentarios.usuario',
       select: '-contrasena'
