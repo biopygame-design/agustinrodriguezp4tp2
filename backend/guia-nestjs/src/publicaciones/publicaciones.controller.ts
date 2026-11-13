@@ -66,4 +66,28 @@ export class PublicacionesController {
     console.log('🗑️ Intentando eliminar Post ID:', id, 'por Usuario ID:', usuarioId);
     return await this.publicacionesService.eliminar(id, usuarioId);
   }
+  @Get(':id')
+  async obtenerPorId(@Param('id') id: string) {
+    return await this.publicacionesService.obtenerPorId(id);
+  }
+
+  // 💬 OBTENER COMENTARIOS PAGINADOS DE UNA PUBLICACIÓN
+  @Get(':id/comentarios')
+  async obtenerComentarios(
+    @Param('id') id: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ) {
+    return await this.publicacionesService.obtenerComentarios(id, limit, offset);
+  }
+
+  // ✍️ CREAR UN COMENTARIO EN UNA PUBLICACIÓN
+  @Post(':id/comentarios')
+  async agregarComentario(
+    @Param('id') id: string,
+    @Body('usuarioId') usuarioId: string,
+    @Body('texto') texto: string,
+  ) {
+    return await this.publicacionesService.agregarComentario(id, usuarioId, texto);
+  }
 }

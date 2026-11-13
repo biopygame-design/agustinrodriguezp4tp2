@@ -13,20 +13,17 @@ export class PublicacionesService {
     private readonly usuarioModel: Model<Usuario>
   ) {}
 
- async listar(orden: string = 'fecha', limitStr?: string, offsetStr?: string) {
+  async listar(orden: string = 'fecha', limitStr?: string, offsetStr?: string) {
     console.log('🚨 VALOR CRUDO DE ORDEN:', JSON.stringify(orden));
     
     const ordenLimpio = orden ? orden.trim().toLowerCase() : 'fecha';
-    console.log('🚨 ORDEN LIMPIO:', JSON.stringify(ordenLimpio));
-
     const limit = limitStr ? parseInt(limitStr, 10) : 10;
     const offset = offsetStr ? parseInt(offsetStr, 10) : 0;
 
     if (ordenLimpio === 'likes') {
-      console.log('✅ ENTRÓ AL IF DE LIKES');
       const publicaciones = await this.publicacionModel.aggregate([
         { 
-          $match: { activo: { $ne: false } } // 👈 ¡Faltaba este filtro acá!
+          $match: { activo: { $ne: false } } 
         },
         { 
           $addFields: { 
@@ -38,14 +35,12 @@ export class PublicacionesService {
         { $limit: limit }, 
       ]);
 
-      console.log('📊 CANTIDAD DE REGRESADOS POR AGGREGATE:', publicaciones.length);
-
       return await this.publicacionModel.populate(publicaciones, {
         path: 'usuario',
         select: '-contrasena',
       });
     }
-    console.log('⚙️ ENTRÓ AL ELSE DE FECHA');
+
     return await this.publicacionModel
       .find({ activo: { $ne: false } })
       .sort({ _id: -1 })
@@ -55,6 +50,96 @@ export class PublicacionesService {
       .lean()
       .exec();
   }
+
+  // 🔍 NUEVO: Obtener una publicación individual por ID
+  async obtenerPorId(id: string) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new NotFoundException('ID de publicación inválido');
+    }
+
+    const publicacion = await this.publicacionModel
+      .findOne({ _id: new Types.ObjectId(id), activo: { $ne: false } })
+      .populate('usuario', '-contrasena')
+      .lean()
+      .exec();
+
+    if (!publicacion) {
+      throw new NotFoundException('Publicación no encontrada');
+    }
+
+    return publicacion;
+  }
+
+  // 💬 NUEVO: Obtener comentarios paginados de una publicación
+  async obtenerComentarios(postId: string, limitStr?: string, offsetStr?: string) {
+    if (!Types.ObjectId.isValid(postId)) {
+      throw new NotFoundException('ID de publicación inválido');
+    }
+
+    const limit = limitStr ? parseInt(limitStr, 10) : 5;
+    const offset = offsetStr ? parseInt(offsetStr, 10) : 0;
+    const objectId = new Types.ObjectId(postId);
+
+    const resultado = await this.publicacionModel.aggregate([
+      { $match: { _id: objectId, activo: { $ne: false } } },
+      { 
+        $project: { 
+          comentarios: { 
+            $slice: [{ $ifNull: ["$comentarios", []] }, offset, limit] 
+          } 
+        } 
+      }
+    ]);
+
+    if (!resultado || resultado.length === 0) {
+      throw new NotFoundException('Publicación no encontrada');
+    }
+
+    const comentarios = resultado[0].comentarios || [];
+
+    // Poblamos los datos del usuario dentro de cada comentario
+    return await this.publicacionModel.populate(comentarios, {
+      path: 'usuario',
+      select: '-contrasena'
+    });
+  }
+
+  // ✍️ NUEVO: Agregar un comentario a una publicación
+  async agregarComentario(postId: string, usuarioId: string, texto: string) {
+    if (!Types.ObjectId.isValid(postId) || !Types.ObjectId.isValid(usuarioId)) {
+      throw new NotFoundException('IDs inválidos');
+    }
+
+    const publicacion = await this.publicacionModel.findById(postId);
+    if (!publicacion || publicacion.activo === false) {
+      throw new NotFoundException('Publicación no encontrada');
+    }
+
+    if (!publicacion.comentarios) {
+      publicacion.comentarios = [];
+    }
+
+    const nuevoComentario = {
+      _id: new Types.ObjectId(),
+      usuario: new Types.ObjectId(usuarioId),
+      texto,
+      createdAt: new Date(),
+      editado: false
+    };
+
+    // Agregamos al inicio del array para que el más nuevo quede arriba
+    publicacion.comentarios.unshift(nuevoComentario as any);
+    await publicacion.save();
+
+    // Poblamos el usuario del comentario recién creado para retornarlo completo al frontend
+    await this.publicacionModel.populate(publicacion, {
+      path: 'comentarios.usuario',
+      select: '-contrasena'
+    });
+
+    return publicacion.comentarios[0];
+  }
+
   async crear(createPublicacionDto: any) {
     if (createPublicacionDto.usuario && typeof createPublicacionDto.usuario === 'string') {
       createPublicacionDto.usuario = new Types.ObjectId(createPublicacionDto.usuario);
@@ -69,7 +154,7 @@ export class PublicacionesService {
 
     const usuario = await this.usuarioModel.findById(objectId).select('-contrasena').lean().exec();
     
-    const publicaciones = await this.publicacionModel.find({ usuario: objectId })
+    const publicaciones = await this.publicacionModel.find({ usuario: objectId, activo: { $ne: false } })
       .sort({ createdAt: -1 })
       .lean()
       .exec();
@@ -103,7 +188,7 @@ export class PublicacionesService {
     return await publicacion.save();
   }
 
- async eliminar(id: string, usuarioId: string) {
+  async eliminar(id: string, usuarioId: string) {
     const objectId = new Types.ObjectId(id);
     const publicacion = await this.publicacionModel.findById(objectId);
     
@@ -111,19 +196,16 @@ export class PublicacionesService {
       throw new NotFoundException('Publicación no encontrada');
     }
 
-    // Buscamos al usuario en la BD para verificar su rol de forma segura
     const usuarioAccion = await this.usuarioModel.findById(usuarioId);
     const rol = usuarioAccion?.rol;
     
     const esAdmin = rol === 'admin' || rol === 'administrador';
     const esCreador = publicacion.usuario.toString() === usuarioId.toString();
 
-    // Validamos permisos: solo el creador o un administrador pueden eliminar
     if (!esCreador && !esAdmin) {
       throw new ForbiddenException('No tenés permisos para eliminar esta publicación');
     }
 
-    // Baja lógica en lugar de borrado físico
     return await this.publicacionModel.findByIdAndUpdate(
       objectId,
       { activo: false },
