@@ -1,7 +1,8 @@
-<div class="tarjeta-publicacion">
+<div class="tarjeta-publicacion" [routerLink]="['/publicaciones', post()._id]" style="cursor: pointer;">
+  
   <!-- Cabecera de la publicación -->
   <div class="header">
-    <strong>@{{ post().usuario?.nombre || 'Usuario' }}</strong>
+    <strong>&#64;{{ post().usuario?.nombre || 'Usuario' }}</strong>
     <span class="fecha">{{ post().createdAt | date:'short' }}</span>
   </div>
 
@@ -20,7 +21,8 @@
   }
 
   <!-- Botones de Acción -->
-  <div class="acciones">
+  <!-- ⚠️ (click)="$event.stopPropagation() evita que al dar like o eliminar se abra el detalle por error -->
+  <div class="acciones" (click)="$event.stopPropagation()">
     <button (click)="darLike()">❤️ Me gusta ({{ post().me_gusta?.length || 0 }})</button>
     
     @if (puedeEliminar()) {

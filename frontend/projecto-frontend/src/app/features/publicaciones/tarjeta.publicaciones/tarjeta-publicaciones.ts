@@ -3,11 +3,12 @@ import { PublicacionesService } from '../../../core/service/publicacionservice/p
 import { AuthService } from '../../../core/service/authservice/authservice';
 import { DatePipe } from '@angular/common';
 import { ImagenUrlPipe } from '../../../pipes/imagen-url-pipe';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tarjeta-publicaciones',
   standalone: true,
-  imports: [DatePipe,ImagenUrlPipe],
+  imports: [DatePipe,ImagenUrlPipe,RouterLink],
   styleUrl: './tarjeta-publicaciones.css',
   templateUrl: './tarjeta-publicaciones.html',
 })

@@ -1,1 +1,73 @@
-<p>publicacionservice works!</p>
+<div class="detalle-wrapper" *ngIf="publicacion">
+  <!-- Botón para volver atrás -->
+  <button routerLink="/publicaciones" class="btn-volver">← Volver al feed</button>
+
+  <!-- 📌 1. Publicación en Grande -->
+  <div class="card-publicacion-grande">
+    <h2>{{ publicacion.titulo }}</h2>
+    
+    <!-- Imagen de la publicación (si tiene) -->
+    <img 
+      *ngIf="publicacion.imagen_publicacion" 
+      [src]="'https://agustinrodriguezp4tp2.onrender.com/uploads/' + publicacion.imagen_publicacion" 
+      alt="Imagen del post" 
+      class="img-grande"
+    />
+    
+    <p class="descripcion-grande">{{ publicacion.descripcion }}</p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 💬 2. Sección de Comentarios -->
+  <section class="seccion-comentarios">
+    <h3>Comentarios</h3>
+
+    <!-- Formulario para escribir un nuevo comentario -->
+    <form [formGroup]="comentarioForm" (ngSubmit)="enviarComentario()" class="form-comentario">
+      <textarea 
+        formControlName="texto" 
+        placeholder="Escribe un comentario..." 
+        rows="3"
+      ></textarea>
+      <button type="submit" [disabled]="comentarioForm.invalid" class="btn-comentar">
+        Comentar
+      </button>
+    </form>
+
+    <!-- Lista de comentarios ordenados uno debajo del otro -->
+    <div class="lista-comentarios">
+      <div *ngFor="let c of comentarios" class="comentario-card">
+        <div class="comentario-header">
+          <strong>{{ c.usuario?.nombre || 'Usuario' }} {{ c.usuario?.apellido || '' }}</strong>
+          <small class="fecha">{{ c.createdAt | date:'short' }}</small>
+        </div>
+        <p class="comentario-texto">{{ c.texto }}</p>
+        <small *ngIf="c.editado" class="text-editado">(Editado)</small>
+      </div>
+
+      <!-- Mensaje si no hay comentarios -->
+      <p *ngIf="comentarios.length === 0" class="sin-comentarios">
+        Sé el primero en comentar esta publicación.
+      </p>
+    </div>
+
+    <!-- 🔄 3. Botón "Cargar más" -->
+    <button 
+      *ngIf="hayMasComentarios && comentarios.length > 0" 
+      (click)="cargarMasComentarios()" 
+      class="btn-cargar-mas"
+    >
+      Cargar más comentarios
+    </button>
+
+    <p *ngIf="!hayMasComentarios && comentarios.length > 0" class="fin-comentarios">
+      No hay más comentarios para mostrar.
+    </p>
+  </section>
+</div>
+
+<!-- Spinner o mensaje de carga si todavía está buscando el post -->
+<div *ngIf="!publicacion" class="loading">
+  <p>Cargando publicación...</p>
+</div>
