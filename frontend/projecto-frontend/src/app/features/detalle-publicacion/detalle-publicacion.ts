@@ -50,12 +50,23 @@ export class DetallePublicacionComponent implements OnInit {
 }
 
   cargarDetalle(): void {
-    this.publicacionesService.obtenerPorId(this.publicacionId).subscribe({
-      next: (data) => { this.publicacion = data; },
-      error: (err) => console.error('Error al cargar la publicación:', err)
-    });
-  }
+  console.log('ID de publicación:', this.publicacionId);
 
+  this.publicacionesService.obtenerPorId(this.publicacionId).subscribe({
+    next: (data) => {
+      console.log('RESPUESTA DEL BACKEND:', data);
+
+      this.publicacion = data;
+
+      console.log('PUBLICACION ASIGNADA:', this.publicacion);
+    },
+    error: (err) => {
+      console.error('ERROR AL OBTENER PUBLICACIÓN:', err);
+      console.error('ESTADO HTTP:', err.status);
+      console.error('RESPUESTA:', err.error);
+    }
+  });
+}
   cargarComentarios(): void {
     this.publicacionesService.obtenerComentarios(this.publicacionId, this.limit, this.offset).subscribe({
       next: (nuevos: any[]) => {
