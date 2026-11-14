@@ -32,12 +32,21 @@ export class DetallePublicacionComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.publicacionId = this.route.snapshot.paramMap.get('id') || '';
-    if (this.publicacionId) {
+  // 🔑 Usamos subscribe para detectar cambios de ID si navegas entre publicaciones sin destruir el componente
+  this.route.paramMap.subscribe(params => {
+    const id = params.get('id');
+    if (id) {
+      this.publicacionId = id;
+      this.publicacion = null; // Resetea para mostrar el cartel de carga al cambiar de post
+      this.comentarios = [];   // Limpia los comentarios anteriores
+      this.offset = 0;
+      this.hayMasComentarios = true;
+
       this.cargarDetalle();
       this.cargarComentarios();
     }
-  }
+  });
+}
 
   cargarDetalle(): void {
     this.publicacionesService.obtenerPorId(this.publicacionId).subscribe({
