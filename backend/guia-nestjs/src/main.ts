@@ -10,7 +10,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [
     'http://localhost:4200',
-    'https://agustinrodriguezp4tp2.vercel.app'
+    'https://agustinrodriguezp4tp2.vercel.app',
+    'https://agustinrodriguezp4tp2-git-sprint-3-biopygame-design.vercel.app'
   ],
     
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
