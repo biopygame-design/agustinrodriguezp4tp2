@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject , ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,6 +18,7 @@ export class DetallePublicacionComponent implements OnInit {
   private publicacionesService = inject(PublicacionesService);
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
 
   publicacionId: string = '';
   publicacion: any = null;
@@ -49,18 +50,17 @@ export class DetallePublicacionComponent implements OnInit {
   });
 }
 
-  cargarDetalle(): void {
+ cargarDetalle(): void {
   this.publicacionesService.obtenerPorId(this.publicacionId).subscribe({
     next: (data) => {
       this.publicacion = data;
 
-      console.log('¿Es null?', this.publicacion === null);
-      console.log('¿Es undefined?', this.publicacion === undefined);
-      console.log('¿Tiene ID?', this.publicacion?._id);
-      console.log('Publicación:', JSON.stringify(this.publicacion));
+      this.cdr.detectChanges();
+
+      console.log('Publicación cargada:', this.publicacion);
     },
     error: (err) => {
-      console.error('Error:', err);
+      console.error('Error al cargar publicación:', err);
     }
   });
 }
