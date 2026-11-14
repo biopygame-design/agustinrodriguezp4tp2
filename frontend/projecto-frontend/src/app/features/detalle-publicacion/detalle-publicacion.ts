@@ -5,10 +5,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PublicacionesService } from '../../core/service/publicacionservice/publicacionservice';
 import { AuthService } from '../../core/service/authservice/authservice';
 import { ImagenUrlPipe } from '../../pipes/imagen-url-pipe';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-detalle-publicacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,ImagenUrlPipe],
+  imports: [CommonModule, ReactiveFormsModule,ImagenUrlPipe,RouterLink],
   templateUrl: './detalle-publicacion.html',
   styleUrl: './detalle-publicacion.css'
 })
