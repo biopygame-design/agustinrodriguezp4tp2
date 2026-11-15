@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Post, UseInterceptors, UploadedFile, Delete, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseInterceptors, UploadedFile, Delete, Query, UseGuards, Req } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto/create-publicacion.dto';
-
+import { Put } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth-guard';
 @Controller('publicaciones')
 export class PublicacionesController {
   constructor(private readonly publicacionesService: PublicacionesService) {}
