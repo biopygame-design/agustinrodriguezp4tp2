@@ -48,15 +48,36 @@
           <strong>&#64;{{ c.usuario?.nombre || 'Usuario' }}</strong>
           <small class="fecha">{{ c.createdAt | date:'short' }}</small>
         </div>
-        <p class="comentario-texto">{{ c.texto }}</p>
-        <small *ngIf="c.editado" class="text-editado">(Editado)</small>
-      </div>
+
+        <!-- 1. MODO NORMAL (Si NO se está editando este comentario) -->
+        <div *ngIf="comentarioEditandoId !== c._id">
+          <p class="comentario-texto">{{ c.texto }}</p>
+          
+          <!-- Cartelito de editado que exige la cátedra -->
+          <small *ngIf="c.editado" class="text-editado">(Editado)</small>
+
+          <!-- Botón de Editar (Solo aparece si el comentario es tuyo) -->
+          <button *ngIf="esMiComentario(c.usuario?._id || c.usuario)" (click)="activarEdicion(c)" class="btn-editar-link">
+            Editar
+          </button>
+        </div>
+
+        <!-- 2. MODO EDICIÓN (Si SÍ se está editando este comentario) -->
+        <div *ngIf="comentarioEditandoId === c._id" class="form-edicion">
+          <textarea [(ngModel)]="textoEditado" rows="2" class="textarea-comentario"></textarea>
+          <div class="botones-edicion">
+            <button (click)="guardarEdicion(c._id)" class="btn-guardar">Guardar</button>
+            <button (click)="cancelarEdicion()" class="btn-cancelar">Cancelar</button>
+          </div>
+        </div>
+
+      </div> <!-- Cierre de .comentario-card (*ngFor) -->
 
       <!-- Mensaje si no hay comentarios -->
       <p *ngIf="comentarios.length === 0" class="sin-comentarios">
         Aún no hay comentarios. ¡Sé el primero en comentar!
       </p>
-    </div>
+    </div> <!-- Cierre de .lista-comentarios -->
 
     <!-- 🔄 3. Botón "Cargar más" -->
     <button 
