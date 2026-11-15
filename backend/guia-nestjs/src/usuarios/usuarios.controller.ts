@@ -1,28 +1,22 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   Post,
-  Req,
-  UseGuards,
-  UseInterceptors,
   UploadedFile,
+  UseInterceptors,
   HttpStatus,
 } from '@nestjs/common';
-import type { Request } from 'express';
 import { CreateUsuariosDto } from './dto/create-usuarios.dto/create-usuarios.dto';
-import { UsuariosService } from './usuarios.service';
-import { LoginUsuarioDto } from './dto/login-usuario.dto/login-usuario.dto';
-import { Throttle } from '@nestjs/throttler';
+import { AuthService } from '../auth/auth.service'; // 👈 Importamos AuthService en vez de UsuariosService
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 
 @Controller('auth')
 export class UsuariosController {
-  // ✅ Declarado correctamente como 'usuariosService' para que coincida en todo el controlador
-  constructor(private readonly usuariosService: UsuariosService) {}
+  // 👈 Inyectamos AuthService
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
@@ -42,7 +36,7 @@ export class UsuariosController {
     @UploadedFile() file?: Express.Multer.File,
   ) {
     const imagenUrl = file ? `/uploads/${file.filename}` : '';
-    return await this.usuariosService.crear(registroDto, imagenUrl);
+    return await this.authService.crear(registroDto, imagenUrl); // 👈 Usamos authService.crear
   }
 
   @Post('login')
@@ -51,7 +45,6 @@ export class UsuariosController {
     const identificador = body.identificador || body.correo || body.email || body.username;
     const password = body.password || body.contrasena || body.clave;
 
-    // ✅ Ahora sí usa 'this.usuariosService' correctamente
-    return await this.usuariosService.login(identificador, password);
+    return await this.authService.login(identificador, password); // 👈 Usamos authService.login
   }
 }
