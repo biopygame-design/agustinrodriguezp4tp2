@@ -7,7 +7,7 @@ import { AuthService } from '../../../core/service/authservice/authservice';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -16,14 +16,14 @@ export class Login {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  // Definimos isLoading y errorMessage como signals para que coincidan con la plantilla
+  // Definimos isLoading y errorMessage como signals para la plantilla
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
 
- loginForm = this.fb.group({
-  identificador: ['', [Validators.required]], // o correo
-  password: ['', [Validators.required]]       // o contrasena
-});
+  loginForm = this.fb.group({
+    identificador: ['', [Validators.required]], // correo o nombre de usuario
+    password: ['', [Validators.required]]       // contraseña
+  });
 
   async onSubmit(): Promise<void> {
     if (this.loginForm.invalid) return;
@@ -37,15 +37,28 @@ export class Login {
       // Capturamos el resultado del servicio
       const resultado = await this.authService.signIn(identificador!, password!);
 
-      // Si el servicio devolvió un error (credenciales inválidas, etc.)
+      // Si el servicio devolvió un error
       if (resultado.error) {
         this.errorMessage.set(resultado.error.message || 'Usuario o contraseña incorrectos');
-        return; // 🛑 Detenemos la ejecución aquí para que no navegue
+        return; 
       }
-      localStorage.setItem('sesion_activa', 'true');
-      this.router.navigate(['/publicaciones']);
 
-      // Si todo salió bien, navegamos al muro
+      // 🔍 Extraemos los datos del interior de 'resultado.data'
+      const datos = resultado.data;
+
+      // Guardamos el token en el Local Storage
+      if (datos && datos.token) {
+        localStorage.setItem('token', datos.token);
+      }
+      
+      localStorage.setItem('sesion_activa', 'true');
+      
+      // Guardamos el objeto usuario si viene dentro de data
+      if (datos && datos.usuario) {
+        localStorage.setItem('usuario', JSON.stringify(datos.usuario));
+      }
+
+      // Redirigimos al muro de publicaciones
       this.router.navigate(['/publicaciones']);
       
     } catch (err) {

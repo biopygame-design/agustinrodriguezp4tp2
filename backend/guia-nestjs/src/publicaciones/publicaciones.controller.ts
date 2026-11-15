@@ -85,4 +85,15 @@ export class PublicacionesController {
   ) {
     return await this.publicacionesService.eliminar(id, usuarioId);
   }
+  @Put(':postId/comentarios/:comentarioId')
+  @UseGuards(AuthGuard) // Asegurate de tener tu guard de autenticación
+  async actualizarComentario(
+    @Param('postId') postId: string,
+    @Param('comentarioId') comentarioId: string,
+    @Body('texto') texto: string,
+    @Req() req: any // O tu decorador para extraer el usuario autenticado del token
+  ) {
+    const usuarioId = req.user.sub || req.user.id; // Depende de cómo armes el payload del JWT
+    return await this.publicacionesService.modificarComentario(postId, comentarioId, usuarioId, texto);
+  }
 }
