@@ -55,7 +55,7 @@ export class App implements OnInit {
 
     this.sessionTimer = setTimeout(() => {
       this.mostrarModalAdvertencia();
-    },  30 * 1000);
+    },  90 * 1000);
   }
 
   // 2. Advierte antes del vencimiento
