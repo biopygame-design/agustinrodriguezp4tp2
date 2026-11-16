@@ -1,85 +1,48 @@
-import { Injectable, signal, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService {
-  private http = inject(HttpClient);
-  
-  // URL base de tu backend en NestJS
-  private apiUrl = 'https://agustinrodriguezp4tp2.onrender.com/api/auth'; 
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 
-  // Signals para manejar el estado igual que en tu código anterior
-  currentUserData = signal<any | null>(null);
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
 
-  constructor() {
-    this.initAuthSession();
+  const token = localStorage.getItem('token');
+
+  console.log('🔍 INTERCEPTOR EJECUTADO:', req.url);
+  console.log('🔑 TOKEN ENCONTRADO:', !!token);
+  console.log('📤 ENVIANDO AUTH:', !!token);
+
+  let clonedReq = req;
+
+  if (token) {
+    clonedReq = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
   }
 
-  // Al arrancar, recupera el usuario si quedó guardado en el navegador
-  private initAuthSession() {
-    const savedUser = localStorage.getItem('usuario');
-    if (savedUser) {
-      this.currentUserData.set(JSON.parse(savedUser));
-    }
-  }
+  return next(clonedReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      const esRutaAuth =
+        req.url.includes('/auth/login') ||
+        req.url.includes('/auth/register') ||
+        req.url.includes('/auth/refrescar');
 
-  // --- REGISTRO ---
-  async register(formData: FormData) {
-    try {
-      const response: any = await firstValueFrom(
-        this.http.post(`${this.apiUrl}/register`, formData)
-      );
-      return { data: response, error: null };
-    } catch (error: any) {
-      return { data: null, error: error.error || { message: 'Error al registrarse en el servidor' } };
-    }
-  }
+      if (error.status === 401 && !esRutaAuth) {
+        console.warn('⚠️ Token rechazado por el servidor.');
 
-  // --- LOGIN ---
-// --- LOGIN ---
-async signIn(identificador: string, password: string) {
-  try {
-    const response: any = await firstValueFrom(
-      this.http.post(`${this.apiUrl}/login`, { identificador, password })
-    );
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('sesion_activa');
 
-    // Si el login es exitoso
-    if (response && response.usuario) {
-  this.currentUserData.set(response.usuario);
+        router.navigate(['/login'], {
+          replaceUrl: true
+        });
+      }
 
-  localStorage.setItem('usuario', JSON.stringify(response.usuario));
-
-  // Guardar JWT para el interceptor
-  localStorage.setItem('token', response.token);
-}
-    return { data: response, error: null };
-  } catch (error: any) {
-    // 🛡️ AQUÍ ESTÁ LA CLAVE: Capturamos el error HTTP que manda NestJS
-    console.error('❌ Error en el login:', error);
-    
-    // Extraemos el mensaje que envía NestJS (ej. 'Credenciales inválidas')
-    const errorMessage = error.error?.message || 'Usuario o contraseña incorrectos';
-
-    return { 
-      data: null, 
-      error: { message: errorMessage } 
-    };
-  }
-}
-
-  // --- LOGOUT ---
-  async signOut() {
-  localStorage.removeItem('usuario');
-  localStorage.removeItem('token');
-  localStorage.removeItem('sesion_activa');
-  this.currentUserData.set(null);
-}
-  async actualizarPerfil(formData: FormData) {
-  return await firstValueFrom(
-    this.http.patch(`${this.apiUrl}/perfil`, formData)
+      return throwError(() => error);
+    })
   );
-}
-}
+};
