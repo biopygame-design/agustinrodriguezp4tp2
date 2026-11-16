@@ -9,6 +9,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const token = localStorage.getItem('token');
 
+  console.log('🔍 INTERCEPTOR EJECUTADO:', req.url);
+  console.log('🔑 TOKEN ENCONTRADO:', !!token);
+  console.log('📤 ENVIANDO AUTH:', !!token);
+
   let clonedReq = req;
 
   if (token) {
@@ -21,15 +25,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-
       const esRutaAuth =
         req.url.includes('/auth/login') ||
-        req.url.includes('/auth/registro') ||
-        req.url.includes('/auth/autorizar') ||
+        req.url.includes('/auth/register') ||
         req.url.includes('/auth/refrescar');
 
       if (error.status === 401 && !esRutaAuth) {
-        console.warn('⚠️ Token vencido. Cerrando sesión.');
+        console.warn('⚠️ Token rechazado por el servidor.');
 
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
