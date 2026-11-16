@@ -106,7 +106,7 @@ export class AuthService {
       nombre_usuario: resto.nombre_usuario,
       rol: resto.rol|| 'usuario' 
     };
-    const token = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
+    const token = await this.jwtService.signAsync(payload, { expiresIn: '2m' });
 
     return {
       mensaje: 'Login exitoso',
