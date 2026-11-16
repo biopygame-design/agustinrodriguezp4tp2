@@ -106,18 +106,26 @@ export class App implements OnInit {
 
   // Cerrar sesión
   cerrarSesionYIrALogin(): void {
-    if (this.sessionTimer) {
-      clearTimeout(this.sessionTimer);
-    }
+  console.log('🚪 Cerrando sesión...');
 
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    localStorage.removeItem('sesion_activa');
-
-    this.mostrarModal = false;
-    this.cargando = false;
-    this.cdr.detectChanges();
-
-    this.router.navigate(['/login']);
+  if (this.sessionTimer) {
+    clearTimeout(this.sessionTimer);
+    this.sessionTimer = null;
   }
+
+  localStorage.removeItem('token');
+  localStorage.removeItem('usuario');
+  localStorage.removeItem('sesion_activa');
+
+  this.mostrarModal = false;
+  this.cargando = false;
+
+  this.cdr.detectChanges();
+
+  this.router.navigate(['/login'], {
+    replaceUrl: true
+  }).then((navego) => {
+    console.log('Resultado de navegación:', navego);
+  });
+}
 }
