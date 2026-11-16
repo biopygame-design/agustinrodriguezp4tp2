@@ -124,7 +124,7 @@ export class AuthService {
       rol: usuarioPayload.rol 
     };
     
-    const nuevoToken = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
+    const nuevoToken = await this.jwtService.signAsync(payload, { expiresIn: '2m' });
     return { token: nuevoToken };
   }
 }
