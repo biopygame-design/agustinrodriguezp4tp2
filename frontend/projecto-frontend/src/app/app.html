@@ -12,6 +12,41 @@
   <p>Verificando sesión, por favor espere...</p>
 </div>
 
+
+
+<!-- Pantalla de carga inicial -->
+<div *ngIf="cargando" class="loading-screen"
+     style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh;">
+  <div class="spinner"></div>
+  <p>Verificando sesión, por favor espere...</p>
+</div>
+
+<!-- Contenido principal -->
+<router-outlet *ngIf="!cargando"></router-outlet>
+
+<!-- Modal de extensión de sesión -->
+<div class="modal-overlay" *ngIf="mostrarModal && !cargando">
+  <div class="modal-sesion">
+    <h2>⏰ Tu sesión está por vencer</h2>
+
+    <p>
+      Tu sesión está a punto de finalizar.
+      ¿Querés extenderla?
+    </p>
+
+    <div class="modal-botones">
+      <button class="btn-extender" (click)="extenderSesion()">
+        Sí, extender sesión
+      </button>
+
+      <button class="btn-cerrar" (click)="cerrarSesionYIrALogin()">
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <!-- Contenido principal de la app (se muestra solo cuando termina de validar) -->
 <router-outlet *ngIf="!cargando"></router-outlet>
 
