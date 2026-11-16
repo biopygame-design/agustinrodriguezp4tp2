@@ -127,4 +127,67 @@ export class AuthService {
     const nuevoToken = await this.jwtService.signAsync(payload, { expiresIn: '2m' });
     return { token: nuevoToken };
   }
+
+async actualizarPerfil(userId: string, datos: any, imagen?: string) {
+  const usuario = await this.usuarioModel.findById(userId);
+
+  if (!usuario) {
+    throw new BadRequestException('Usuario no encontrado');
+  }
+
+  // Campos que el usuario puede modificar
+  const camposPermitidos = [
+    'nombre',
+    'apellido',
+    'correo',
+    'nombre_usuario',
+    'fecha_nacimiento',
+    'descripcion_breve'
+  ];
+
+  for (const campo of camposPermitidos) {
+    if (datos[campo] !== undefined) {
+      const valor = datos[campo];
+
+      if (typeof valor === 'string') {
+        (usuario as any)[campo] =
+          ['correo', 'nombre_usuario'].includes(campo)
+            ? valor.trim().toLowerCase()
+            : valor.trim();
+      }
+    }
+  }
+
+  // Comprobar que el correo y el usuario no pertenezcan a otra cuenta
+  const existente = await this.usuarioModel.findOne({
+    _id: { $ne: usuario._id },
+    $or: [
+      { correo: usuario.correo },
+      { nombre_usuario: usuario.nombre_usuario }
+    ]
+  });
+
+  if (existente) {
+    throw new BadRequestException(
+      'El correo o nombre de usuario ya está registrado'
+    );
+  }
+
+  // Actualizar foto si se recibió una nueva
+  if (imagen) {
+    usuario.imagenPerfil = imagen;
+  }
+
+  await usuario.save();
+
+  // Nunca devolver la contraseña
+  const usuarioObj = usuario.toObject();
+  const { contrasena, ...usuarioSinPassword } = usuarioObj;
+
+  return {
+    mensaje: 'Perfil actualizado correctamente',
+    usuario: usuarioSinPassword
+  };
+}
+
 }

@@ -183,3 +183,103 @@
   object-fit: contain;
   border-radius: 10px;
 }
+
+/* Botón editar perfil */
+.btn-editar-perfil {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-editar-perfil:hover {
+  background: #1d4ed8;
+}
+
+/* Formulario de edición */
+.editar-perfil-card {
+  background: white;
+  padding: 25px;
+  margin: 25px 0;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+}
+
+.editar-perfil-card h3 {
+  margin-bottom: 20px;
+}
+
+.editar-perfil-card .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.editar-perfil-card label {
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+.editar-perfil-card input,
+.editar-perfil-card textarea {
+  padding: 11px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  font: inherit;
+}
+
+.editar-perfil-card input:focus,
+.editar-perfil-card textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.editar-perfil-card small {
+  color: #dc2626;
+  margin-top: 5px;
+}
+
+.editar-botones {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-guardar,
+.btn-cancelar {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-guardar {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-cancelar {
+  background: #64748b;
+  color: white;
+}
+
+.btn-guardar:disabled,
+.btn-cancelar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mensaje-error {
+  color: #dc2626;
+  margin-top: 12px;
+}
+
+.mensaje-exito {
+  color: #16a34a;
+  margin-top: 12px;
+}

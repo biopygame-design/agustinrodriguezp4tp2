@@ -48,10 +48,13 @@ async signIn(identificador: string, password: string) {
 
     // Si el login es exitoso
     if (response && response.usuario) {
-      this.currentUserData.set(response.usuario);
-      localStorage.setItem('usuario', JSON.stringify(response.usuario));
-    }
+  this.currentUserData.set(response.usuario);
 
+  localStorage.setItem('usuario', JSON.stringify(response.usuario));
+
+  // Guardar JWT para el interceptor
+  localStorage.setItem('token', response.token);
+}
     return { data: response, error: null };
   } catch (error: any) {
     // 🛡️ AQUÍ ESTÁ LA CLAVE: Capturamos el error HTTP que manda NestJS
@@ -72,4 +75,9 @@ async signIn(identificador: string, password: string) {
     localStorage.removeItem('usuario');
     this.currentUserData.set(null);
   }
+  async actualizarPerfil(formData: FormData) {
+  return await firstValueFrom(
+    this.http.patch(`${this.apiUrl}/perfil`, formData)
+  );
+}
 }

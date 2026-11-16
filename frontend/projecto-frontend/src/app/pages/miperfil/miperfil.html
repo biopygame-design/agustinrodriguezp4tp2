@@ -1,78 +1,210 @@
+
 <div class="perfil-container" *ngIf="!isLoading(); else cargando">
-  
-  <!-- 🔹 Botón de Retorno -->
+
   <div class="perfil-nav">
-    <a routerLink="/publicaciones" class="btn-volver">← Volver al Muro</a>
+    <a routerLink="/publicaciones" class="btn-volver">
+      ← Volver al Muro
+    </a>
   </div>
 
-  <!-- 🔹 Tarjeta de Datos Personales y Foto -->
   <div class="perfil-card" *ngIf="usuarioData() as user">
+
     <div class="avatar-container">
-      <img [src]="user.imagenPerfil | imagenUrl:'perfil'" 
-           alt="Foto de perfil" 
-           class="perfil-img">
+      <img
+        [src]="user.imagenPerfil | imagenUrl:'perfil'"
+        alt="Foto de perfil"
+        class="perfil-img">
     </div>
-    
+
     <div class="perfil-info">
-      <!-- Nombre y Apellido -->
+
       <h2>{{ user.nombre }} {{ user.apellido || '' }}</h2>
-      
-      <!-- Nombre de usuario / Arroba -->
-      <p class="username" *ngIf="user.nombre_usuario">@{{ user.nombre_usuario }}</p>
-      
-      <!-- Correo -->
-      <p class="email"><strong>Correo:</strong> {{ user.correo }}</p>
-      
-      <!-- Descripción o Bio -->
-      <p class="bio"><strong>Acerca de mí:</strong> {{ user.descripcion_breve || 'Sin descripción disponible.' }}</p>
-      
-      <!-- Fecha de Nacimiento -->
-      <p class="birth" *ngIf="user.fecha_nacimiento">
-        <strong>Fecha de Nacimiento:</strong> {{ user.fecha_nacimiento | date:'dd/MM/yyyy' }}
+
+      <p class="username" *ngIf="user.nombre_usuario">
+        @{{ user.nombre_usuario }}
       </p>
+
+      <p class="email">
+        <strong>Correo:</strong> {{ user.correo }}
+      </p>
+
+      <p class="bio">
+        <strong>Acerca de mí:</strong>
+        {{ user.descripcion_breve || 'Sin descripción disponible.' }}
+      </p>
+
+      <p class="birth" *ngIf="user.fecha_nacimiento">
+        <strong>Fecha de Nacimiento:</strong>
+        {{ user.fecha_nacimiento | date:'dd/MM/yyyy' }}
+      </p>
+
+      <button
+        type="button"
+        class="btn-editar-perfil"
+        *ngIf="!modoEdicion()"
+        (click)="abrirEdicion()">
+        ✏️ Editar perfil
+      </button>
+
     </div>
   </div>
 
-  <!-- 🔹 Sección de las Últimas 3 Publicaciones -->
+  <!-- FORMULARIO DE EDICIÓN -->
+  <div class="editar-perfil-card" *ngIf="modoEdicion()">
+
+    <h3>Editar mi perfil</h3>
+
+    <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()">
+
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" formControlName="nombre">
+
+        <small *ngIf="perfilForm.get('nombre')?.touched && perfilForm.get('nombre')?.invalid">
+          El nombre debe tener al menos 2 caracteres.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Apellido</label>
+        <input type="text" formControlName="apellido">
+
+        <small *ngIf="perfilForm.get('apellido')?.touched && perfilForm.get('apellido')?.invalid">
+          El apellido debe tener al menos 2 caracteres.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" formControlName="correo">
+
+        <small *ngIf="perfilForm.get('correo')?.touched && perfilForm.get('correo')?.invalid">
+          Ingresá un correo válido.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre de usuario</label>
+        <input type="text" formControlName="nombre_usuario">
+
+        <small *ngIf="perfilForm.get('nombre_usuario')?.touched && perfilForm.get('nombre_usuario')?.invalid">
+          Debe tener al menos 3 caracteres.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Fecha de nacimiento</label>
+        <input type="date" formControlName="fecha_nacimiento">
+      </div>
+
+      <div class="form-group">
+        <label>Acerca de mí</label>
+        <textarea
+          formControlName="descripcion_breve"
+          maxlength="250"
+          rows="4">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Cambiar foto de perfil</label>
+        <input
+          type="file"
+          accept="image/*"
+          (change)="seleccionarImagen($event)">
+      </div>
+
+      <p class="mensaje-error" *ngIf="mensajeError()">
+        {{ mensajeError() }}
+      </p>
+
+      <p class="mensaje-exito" *ngIf="mensajeExito()">
+        {{ mensajeExito() }}
+      </p>
+
+      <div class="editar-botones">
+
+        <button
+          type="submit"
+          class="btn-guardar"
+          [disabled]="perfilForm.invalid || guardando()">
+
+          {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
+
+        </button>
+
+        <button
+          type="button"
+          class="btn-cancelar"
+          [disabled]="guardando()"
+          (click)="cancelarEdicion()">
+
+          Cancelar
+
+        </button>
+
+      </div>
+
+    </form>
+  </div>
+
+  <!-- PUBLICACIONES -->
   <div class="mis-publicaciones-section">
+
     <h3>Mis Últimas 3 Publicaciones</h3>
 
     <div *ngIf="ultimasPublicaciones().length === 0" class="no-posts">
       <p>No tenés publicaciones realizadas todavía.</p>
     </div>
 
-    <!-- Bucle para recorrer las publicaciones -->
     <div class="post-card" *ngFor="let post of ultimasPublicaciones()">
-      <h4 class="post-title">{{ post.titulo }}</h4>
-      <p class="post-content">{{ post.descripcion }}</p>
-      
-      <div class="post-image-container" *ngIf="post.imagen_publicacion">
-        <img [src]="post.imagen_publicacion | imagenUrl:'post'" 
-             alt="Imagen del post" 
-             class="post-img">
-      </div>
-      
-      <span class="post-date">{{ post.createdAt | date:'medium' }}</span>
 
-      <!-- Sub-sección de Comentarios -->
+      <h4 class="post-title">{{ post.titulo }}</h4>
+
+      <p class="post-content">{{ post.descripcion }}</p>
+
+      <div class="post-image-container" *ngIf="post.imagen_publicacion">
+        <img
+          [src]="post.imagen_publicacion | imagenUrl:'post'"
+          alt="Imagen del post"
+          class="post-img">
+      </div>
+
+      <span class="post-date">
+        {{ post.createdAt | date:'medium' }}
+      </span>
+
       <div class="comentarios-container">
+
         <h5>Comentarios</h5>
-        
-        <div *ngIf="!post.comentarios || post.comentarios.length === 0" class="no-comments">
+
+        <div
+          *ngIf="!post.comentarios || post.comentarios.length === 0"
+          class="no-comments">
           <p>Sin comentarios en esta publicación.</p>
         </div>
 
-        <div class="comentario-item" *ngFor="let comentario of post.comentarios">
-          <span class="comentario-autor">@{{ comentario.usuario?.nombre_usuario || comentario.usuario?.nombre || 'Usuario' }}:</span>
-          <span class="comentario-texto">{{ comentario.texto }}</span>
-        </div>
-      </div>
-    </div>
+        <div
+          class="comentario-item"
+          *ngFor="let comentario of post.comentarios">
 
+          <span class="comentario-autor">
+            @{{ comentario.usuario?.nombre_usuario || comentario.usuario?.nombre || 'Usuario' }}:
+          </span>
+
+          <span class="comentario-texto">
+            {{ comentario.texto }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
   </div>
+
 </div>
 
-<!-- Template de carga -->
 <ng-template #cargando>
   <div class="loading-spinner">
     <p>Cargando información del perfil...</p>

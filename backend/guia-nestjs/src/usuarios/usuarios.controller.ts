@@ -6,12 +6,16 @@ import {
   UploadedFile,
   UseInterceptors,
   HttpStatus,
+  UseGuards,
+  Patch,
+  Req,
 } from '@nestjs/common';
 import { CreateUsuariosDto } from './dto/create-usuarios.dto/create-usuarios.dto';
 import { AuthService } from '../auth/auth.service'; // 👈 Importamos AuthService en vez de UsuariosService
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AuthGuard } from '../auth/auth-guard';
 
 @Controller('auth')
 export class UsuariosController {
@@ -47,4 +51,41 @@ export class UsuariosController {
 
     return await this.authService.login(identificador, password); // 👈 Usamos authService.login
   }
+
+@Patch('perfil')
+@UseGuards(AuthGuard)
+@UseInterceptors(
+  FileInterceptor('imagen', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, callback) => {
+        const uniqueSuffix =
+          Date.now() + '-' + Math.round(Math.random() * 1e9);
+
+        callback(
+          null,
+          `${uniqueSuffix}${extname(file.originalname)}`
+        );
+      }
+    })
+  })
+)
+async actualizarPerfil(
+  @Req() req: Request,
+  @Body() body: any,
+  @UploadedFile() file?: Express.Multer.File
+) {
+  const usuarioId = (req as any).user.sub;
+
+  const imagenUrl = file
+    ? `/uploads/${file.filename}`
+    : undefined;
+
+  return await this.authService.actualizarPerfil(
+    usuarioId,
+    body,
+    imagenUrl
+  );
+}
+
 }
