@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
 
+import { firstValueFrom } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
@@ -77,9 +77,27 @@ async signIn(identificador: string, password: string) {
   localStorage.removeItem('sesion_activa');
   this.currentUserData.set(null);
 }
-  async actualizarPerfil(formData: FormData) {
+ 
+async actualizarPerfil(formData: FormData) {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  console.log('🔐 Actualizando perfil. Token encontrado:', !!token);
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
   return await firstValueFrom(
-    this.http.patch(`${this.apiUrl}/perfil`, formData)
+    this.http.patch(
+      `${this.apiUrl}/perfil`,
+      formData,
+      { headers }
+    )
   );
 }
+
 }

@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 
+
 import { AuthService } from '../../core/service/authservice/authservice';
 import { ImagenUrlPipe } from '../../pipes/imagen-url-pipe';
 
