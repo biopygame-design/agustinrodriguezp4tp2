@@ -62,7 +62,7 @@ export class AuthService {
       nombre_usuario: resto.nombre_usuario,
       rol: resto.rol || 'usuario' 
     };
-    const token = await this.jwtService.signAsync(payload, { expiresIn: '2m' });
+    const token = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
 
     return { 
       mensaje: 'Usuario creado con éxito', 
@@ -106,7 +106,7 @@ export class AuthService {
       nombre_usuario: resto.nombre_usuario,
       rol: resto.rol|| 'usuario' 
     };
-    const token = await this.jwtService.signAsync(payload, { expiresIn: '2m' });
+    const token = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
 
     return {
       mensaje: 'Login exitoso',
@@ -124,7 +124,7 @@ export class AuthService {
       rol: usuarioPayload.rol 
     };
     
-    const nuevoToken = await this.jwtService.signAsync(payload, { expiresIn: '2m' });
+    const nuevoToken = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
     return { token: nuevoToken };
   }
 
