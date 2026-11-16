@@ -93,10 +93,12 @@ export class DetallePublicacionComponent implements OnInit {
 
     this.publicacionesService.agregarComentario(this.publicacionId, usuarioId, texto).subscribe({
       next: (nuevoComentario) => {
-        this.comentarios.unshift(nuevoComentario);
-        this.comentarioForm.reset();
-        this.cdr.detectChanges();
-      },
+  this.comentarios.unshift(nuevoComentario);
+  this.offset++;
+
+  this.comentarioForm.reset();
+  this.cdr.detectChanges();
+},
       error: (err) => console.error('Error al enviar comentario:', err)
     });
   }
