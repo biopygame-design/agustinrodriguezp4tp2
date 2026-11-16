@@ -49,13 +49,13 @@ export class App implements OnInit {
     });
   }
 
-  // 1. Inicia el conteo de 10 minutos
+  // 1. Inicia el conteo de 10 minutos 10 * 60 * 1000
   iniciarTemporizadorSesion() {
     if (this.sessionTimer) clearTimeout(this.sessionTimer);
 
     this.sessionTimer = setTimeout(() => {
       this.mostrarModalAdvertencia();
-    }, 10 * 60 * 1000);
+    },  30 * 1000);
   }
 
   // 2. Advierte antes del vencimiento
