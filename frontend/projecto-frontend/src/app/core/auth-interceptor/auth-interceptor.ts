@@ -11,7 +11,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   console.log('🔍 INTERCEPTOR EJECUTADO:', req.url);
   console.log('🔑 TOKEN ENCONTRADO:', !!token);
-  console.log('📤 ENVIANDO AUTH:', !!token);
 
   let clonedReq = req;
 
@@ -21,10 +20,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         Authorization: `Bearer ${token}`
       }
     });
+
+    console.log('📤 ENVIANDO AUTH: true');
+  } else {
+    console.warn('⚠️ No se encontró ningún token en Local Storage');
   }
 
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
+
       const esRutaAuth =
         req.url.includes('/auth/login') ||
         req.url.includes('/auth/register') ||
