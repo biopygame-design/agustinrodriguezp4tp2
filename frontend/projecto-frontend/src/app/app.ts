@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, signal, ChangeDetectorRef, NgZone } from '@angular/core';
@@ -12,8 +13,8 @@ import { Router, RouterOutlet } from '@angular/router';
 export class App implements OnInit {
   protected readonly title = signal('projecto-frontend');
 
-  cargando: boolean = true;
-  mostrarModal: boolean = false; // 👈 Controla el modal personalizado en tu app.html
+  cargando = true;
+  mostrarModal = false;
   private sessionTimer: any;
 
   private apiUrl = 'https://agustinrodriguezp4tp2.onrender.com/api/auth';
@@ -22,10 +23,15 @@ export class App implements OnInit {
     private http: HttpClient,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone // 👈 Necesario para asegurar que Angular redibuje el modal al saltar el timer
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
+    this.validarSesion();
+  }
+
+  // Validar sesión al iniciar la aplicación
+  validarSesion(): void {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -39,70 +45,79 @@ export class App implements OnInit {
     });
 
     this.http.post(`${this.apiUrl}/autorizar`, {}, { headers }).subscribe({
-      next: (res: any) => {
-        console.log('✅ Token válido:', res);
+      next: () => {
         this.cargando = false;
-        this.cdr.detectChanges();
         this.iniciarTemporizadorSesion();
+        this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.warn('❌ Token inválido o expirado:', err);
+      error: () => {
         this.cerrarSesionYIrALogin();
       }
     });
   }
 
-  // 1. Inicia el conteo (90 segundos = avisa 30s antes de los 2 minutos)
-  iniciarTemporizadorSesion() {
-    if (this.sessionTimer) clearTimeout(this.sessionTimer);
+  // Iniciar temporizador
+  iniciarTemporizadorSesion(): void {
+    if (this.sessionTimer) {
+      clearTimeout(this.sessionTimer);
+    }
 
     this.sessionTimer = setTimeout(() => {
       this.ngZone.run(() => {
-        console.log('⏰ Faltan 30 segundos para que venza la sesión. Mostrando modal...');
         this.mostrarModal = true;
         this.cdr.detectChanges();
+        console.log('⏰ Modal de sesión mostrado');
       });
     }, 90 * 1000);
   }
 
-  // 2. Se ejecuta al hacer clic en "Sí, extender" dentro del modal HTML
-  extenderSesion() {
-    this.mostrarModal = false;
+  // Extender sesión
+  extenderSesion(): void {
     const token = localStorage.getItem('token');
+
+    if (!token) {
+      this.cerrarSesionYIrALogin();
+      return;
+    }
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
 
     this.http.post<any>(`${this.apiUrl}/refrescar`, {}, { headers }).subscribe({
-      next: (res: any) => {
+      next: (res) => {
         const tokenNuevo = res.token || res.data?.token;
 
         if (tokenNuevo) {
           localStorage.setItem('token', tokenNuevo);
+          this.mostrarModal = false;
           this.iniciarTemporizadorSesion();
-          console.log('🔄 Sesión extendida con éxito');
+          this.cdr.detectChanges();
+          console.log('🔄 Sesión extendida correctamente');
         } else {
           this.cerrarSesionYIrALogin();
         }
       },
-      error: (err) => {
-        console.warn('❌ Error al refrescar el token:', err);
+      error: () => {
         this.cerrarSesionYIrALogin();
       }
     });
   }
 
-  // 3. Cierra la sesión (y oculta el modal si estaba abierto)
-  cerrarSesionYIrALogin() {
-    if (this.sessionTimer) clearTimeout(this.sessionTimer);
+  // Cerrar sesión
+  cerrarSesionYIrALogin(): void {
+    if (this.sessionTimer) {
+      clearTimeout(this.sessionTimer);
+    }
 
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
+    localStorage.removeItem('sesion_activa');
 
     this.mostrarModal = false;
     this.cargando = false;
     this.cdr.detectChanges();
+
     this.router.navigate(['/login']);
   }
 }

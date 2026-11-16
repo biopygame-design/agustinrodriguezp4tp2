@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/service/authservice/authservice';
+import { Injector } from '@angular/core';
+import { App } from '../../../app';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +17,7 @@ export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-
+  private injector = inject(Injector);
   // Definimos isLoading y errorMessage como signals para la plantilla
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
@@ -59,7 +61,10 @@ export class Login {
       }
 
       // Redirigimos al muro de publicaciones
-      this.router.navigate(['/publicaciones']);
+      this.router.navigate(['/publicaciones']).then(() => {
+    const app = this.injector.get(App);
+    app.validarSesion();
+});
       
     } catch (err) {
       console.error('Error inesperado al iniciar sesión', err);
