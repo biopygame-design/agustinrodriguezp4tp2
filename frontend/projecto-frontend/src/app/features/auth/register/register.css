@@ -146,3 +146,31 @@ button[type="submit"]:disabled {
 .redirect-text a:hover {
   text-decoration: underline;
 }
+/* Validaciones en tiempo real */
+
+/* Campo incorrecto */
+.form-group input.ng-invalid.ng-dirty,
+.form-group textarea.ng-invalid.ng-dirty {
+  border: 1px solid #dc2626;
+}
+
+/* Campo correcto */
+.form-group input.ng-valid.ng-dirty,
+.form-group textarea.ng-valid.ng-dirty {
+  border: 1px solid #16a34a;
+}
+
+/* Transición suave */
+.form-group input,
+.form-group textarea {
+  transition: border-color 0.2s ease;
+}
+
+/* Mensajes de error */
+.error-text {
+  display: block;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 4px;
+}
