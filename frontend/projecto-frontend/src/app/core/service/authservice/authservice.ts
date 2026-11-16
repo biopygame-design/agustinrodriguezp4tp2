@@ -72,9 +72,11 @@ async signIn(identificador: string, password: string) {
 
   // --- LOGOUT ---
   async signOut() {
-    localStorage.removeItem('usuario');
-    this.currentUserData.set(null);
-  }
+  localStorage.removeItem('usuario');
+  localStorage.removeItem('token');
+  localStorage.removeItem('sesion_activa');
+  this.currentUserData.set(null);
+}
   async actualizarPerfil(formData: FormData) {
   return await firstValueFrom(
     this.http.patch(`${this.apiUrl}/perfil`, formData)
