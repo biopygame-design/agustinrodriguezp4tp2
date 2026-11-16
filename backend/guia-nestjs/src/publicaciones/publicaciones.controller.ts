@@ -94,6 +94,10 @@ export class PublicacionesController {
     @Body('texto') texto: string,
     @Req() req: any // O tu decorador para extraer el usuario autenticado del token
   ) {
+    console.log('🚀 RUTA PUT EJECUTADA');
+    console.log('POST:', postId);
+    console.log('COMENTARIO:', comentarioId);
+    console.log('USUARIO:', req.user);
     const usuarioId = req.user.sub || req.user.id; // Depende de cómo armes el payload del JWT
     return await this.publicacionesService.modificarComentario(postId, comentarioId, usuarioId, texto);
   }

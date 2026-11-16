@@ -210,46 +210,60 @@ export class PublicacionesService {
     );
   }
   // ✏️ Modificar un comentario existente (Por PUT)
-  async modificarComentario(postId: string, comentarioId: string, usuarioId: string, nuevoTexto: string) {
-    if (!Types.ObjectId.isValid(postId) || !Types.ObjectId.isValid(comentarioId) || !Types.ObjectId.isValid(usuarioId)) {
-      throw new NotFoundException('IDs inválidos');
-    }
+  async modificarComentario(
+  postId: string,
+  comentarioId: string,
+  usuarioId: string,
+  nuevoTexto: string
+) {
+  console.log('POST ID:', postId);
+  console.log('COMENTARIO ID:', comentarioId);
+  console.log('USUARIO ID:', usuarioId);
 
-    const publicacion: any = await this.publicacionModel.findById(postId);
-    if (!publicacion || publicacion.activo === false) {
-      throw new NotFoundException('Publicación no encontrada');
-    }
-
-    // Buscamos el comentario dentro del array de comentarios
-    const comentario = publicacion.comentarios.id(comentarioId);
-    if (!comentario) {
-      throw new NotFoundException('Comentario no encontrado');
-    }
-
-    // Verificamos que el usuario que edita sea el dueño del comentario (o admin si querés darle permisos)
-    const esCreadorComentario = comentario.usuario.toString() === usuarioId.toString();
-    
-    // Si querés permitir también que el admin del post lo edite, podés chequearlo acá, 
-    // pero por regla general el autor es el único que edita su comentario.
-    if (!esCreadorComentario) {
-      throw new ForbiddenException('No tenés permisos para editar este comentario');
-    }
-
-    // Actualizamos el texto, marcamos editado en true y actualizamos fecha si lo deseas
-    comentario.texto = nuevoTexto;
-    comentario.editado = true;
-
-    await publicacion.save();
-
-    // Poblamos los datos del usuario para devolverlo prolijo al frontend
-    await this.publicacionModel.populate(publicacion, {
-      path: 'comentarios.usuario',
-      select: '-contrasena'
-    });
-
-    // Retornamos el comentario actualizado
-    return publicacion.comentarios.id(comentarioId);
+  if (
+    !Types.ObjectId.isValid(postId) ||
+    !Types.ObjectId.isValid(comentarioId) ||
+    !Types.ObjectId.isValid(usuarioId)
+  ) {
+    throw new NotFoundException('IDs inválidos');
   }
+
+  const publicacion: any = await this.publicacionModel.findById(postId);
+
+  console.log('PUBLICACIÓN ENCONTRADA:', !!publicacion);
+  console.log('CANTIDAD DE COMENTARIOS:', publicacion?.comentarios?.length);
+
+  if (!publicacion || publicacion.activo === false) {
+    throw new NotFoundException('Publicación no encontrada');
+  }
+
+  const comentario = publicacion.comentarios.id(comentarioId);
+
+  console.log('COMENTARIO ENCONTRADO:', !!comentario);
+
+  if (!comentario) {
+    throw new NotFoundException('Comentario no encontrado');
+  }
+
+  const esCreadorComentario =
+    comentario.usuario.toString() === usuarioId.toString();
+
+  if (!esCreadorComentario) {
+    throw new ForbiddenException('No tenés permisos para editar este comentario');
+  }
+
+  comentario.texto = nuevoTexto;
+  comentario.editado = true;
+
+  await publicacion.save();
+
+  await this.publicacionModel.populate(publicacion, {
+    path: 'comentarios.usuario',
+    select: '-contrasena'
+  });
+
+  return publicacion.comentarios.id(comentarioId);
+}
 }
  
 
