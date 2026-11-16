@@ -210,14 +210,15 @@ export class PublicacionesService {
     );
   }
   // ✏️ Modificar un comentario existente (Por PUT)
-  async modificarComentario(
+  
+async modificarComentario(
   postId: string,
   comentarioId: string,
   usuarioId: string,
   nuevoTexto: string
 ) {
   console.log('POST ID:', postId);
-  console.log('COMENTARIO ID:', comentarioId);
+  console.log('COMENTARIO ID RECIBIDO:', comentarioId);
   console.log('USUARIO ID:', usuarioId);
 
   if (
@@ -237,6 +238,17 @@ export class PublicacionesService {
     throw new NotFoundException('Publicación no encontrada');
   }
 
+  // Mostrar los IDs reales guardados en MongoDB
+  console.log(
+    '📝 IDS REALES DE LOS COMENTARIOS:',
+    publicacion.comentarios.map((c: any) => ({
+      id: c._id?.toString(),
+      usuario: c.usuario?.toString(),
+      texto: c.texto
+    }))
+  );
+
+  // Buscar el comentario por su ID
   const comentario = publicacion.comentarios.id(comentarioId);
 
   console.log('COMENTARIO ENCONTRADO:', !!comentario);
@@ -245,25 +257,33 @@ export class PublicacionesService {
     throw new NotFoundException('Comentario no encontrado');
   }
 
+  // Verificar que el usuario sea el autor
   const esCreadorComentario =
     comentario.usuario.toString() === usuarioId.toString();
 
   if (!esCreadorComentario) {
-    throw new ForbiddenException('No tenés permisos para editar este comentario');
+    throw new ForbiddenException(
+      'No tenés permisos para editar este comentario'
+    );
   }
 
+  // Actualizar comentario
   comentario.texto = nuevoTexto;
   comentario.editado = true;
 
   await publicacion.save();
 
+  // Recuperar los datos del usuario
   await this.publicacionModel.populate(publicacion, {
     path: 'comentarios.usuario',
     select: '-contrasena'
   });
 
+  console.log('✅ COMENTARIO MODIFICADO CORRECTAMENTE');
+
   return publicacion.comentarios.id(comentarioId);
 }
+
 }
  
 
