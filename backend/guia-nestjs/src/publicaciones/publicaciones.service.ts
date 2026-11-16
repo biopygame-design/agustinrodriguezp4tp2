@@ -212,6 +212,7 @@ export class PublicacionesService {
   // ✏️ Modificar un comentario existente (Por PUT)
   
 
+
 async modificarComentario(
   postId: string,
   comentarioId: string,
@@ -219,7 +220,7 @@ async modificarComentario(
   nuevoTexto: string
 ) {
   console.log('POST ID:', postId);
-  console.log('COMENTARIO ID RECIBIDO:', comentarioId);
+  console.log('COMENTARIO ID:', comentarioId);
   console.log('USUARIO ID:', usuarioId);
 
   if (
@@ -232,25 +233,16 @@ async modificarComentario(
 
   const publicacion: any = await this.publicacionModel.findById(postId);
 
-  console.log('PUBLICACIÓN ENCONTRADA:', !!publicacion);
-  console.log('CANTIDAD DE COMENTARIOS:', publicacion?.comentarios?.length);
-
   if (!publicacion || publicacion.activo === false) {
     throw new NotFoundException('Publicación no encontrada');
   }
 
-  // Mostrar los IDs reales guardados en MongoDB
-  console.log(
-    '📝 IDS REALES DE LOS COMENTARIOS:',
-    publicacion.comentarios.map((c: any) => ({
-      id: c._id?.toString(),
-      usuario: c.usuario?.toString(),
-      texto: c.texto
-    }))
-  );
+  console.log('COMENTARIOS:', publicacion.comentarios);
 
-  // Buscar el comentario por su ID
-  const comentario = publicacion.comentarios.id(comentarioId);
+  // Buscar directamente por el identificador
+  const comentario = publicacion.comentarios.find(
+    (c: any) => c._id.toString() === comentarioId.toString()
+  );
 
   console.log('COMENTARIO ENCONTRADO:', !!comentario);
 
@@ -258,7 +250,7 @@ async modificarComentario(
     throw new NotFoundException('Comentario no encontrado');
   }
 
-  // Verificar que el usuario sea el autor
+  // Verificar que sea el autor del comentario
   const esCreadorComentario =
     comentario.usuario.toString() === usuarioId.toString();
 
@@ -268,22 +260,27 @@ async modificarComentario(
     );
   }
 
-  // Actualizar comentario
+  // Modificar el comentario
   comentario.texto = nuevoTexto;
   comentario.editado = true;
 
+  // Asegurar que Mongoose registre los cambios
+  publicacion.markModified('comentarios');
+
   await publicacion.save();
 
-  // Recuperar los datos del usuario
+  console.log('✅ COMENTARIO MODIFICADO CORRECTAMENTE');
+
   await this.publicacionModel.populate(publicacion, {
     path: 'comentarios.usuario',
     select: '-contrasena'
   });
 
-  console.log('✅ COMENTARIO MODIFICADO CORRECTAMENTE');
-
-  return publicacion.comentarios.id(comentarioId);
+  return publicacion.comentarios.find(
+    (c: any) => c._id.toString() === comentarioId.toString()
+  );
 }
+
 
 
 }
