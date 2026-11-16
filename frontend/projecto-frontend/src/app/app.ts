@@ -1,7 +1,7 @@
 
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal,ChangeDetectorRef } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -19,7 +19,7 @@ export class App implements OnInit {
   // URL de Render
   private apiUrl = 'https://agustinrodriguezp4tp2.onrender.com/api/auth';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router,private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
@@ -39,6 +39,7 @@ export class App implements OnInit {
       next: (res: any) => {
         console.log('✅ Token válido:', res);
         this.cargando = false;
+        this.cdr.detectChanges();
         this.iniciarTemporizadorSesion();
       },
       error: (err) => {
