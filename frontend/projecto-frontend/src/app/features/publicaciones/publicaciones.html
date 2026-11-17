@@ -2,9 +2,23 @@
   <h2>Muro de Publicaciones</h2>
 
   <div class="acciones-nav">
-    <a routerLink="/miperfil" class="btn-perfil">Mi Perfil</a>
-    <button (click)="onLogout()" class="btn-logout">Cerrar Sesión</button>
-  </div>
+
+  <a routerLink="/miperfil" class="btn-perfil">
+    Mi Perfil
+  </a>
+
+  <a
+    *ngIf="authService.currentUserData()?.rol === 'admin'"
+    routerLink="/admin/usuarios"
+    class="btn-admin">
+    Administrar usuarios
+  </a>
+
+  <button (click)="onLogout()" class="btn-logout">
+    Cerrar Sesión
+  </button>
+
+</div>
 
   <!-- 1️⃣ FORMULARIO PARA CREAR PUBLICACIÓN -->
   <div class="crear-post-card">
