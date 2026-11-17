@@ -10,11 +10,20 @@
   <div class="perfil-card" *ngIf="usuarioData() as user">
 
     <div class="avatar-container">
-      <img
-        [src]="user.imagenPerfil | imagenUrl:'perfil'"
-        alt="Foto de perfil"
-        class="perfil-img">
+
+  <img
+    *ngIf="user.imagenPerfil; else avatarVacio"
+    [src]="user.imagenPerfil | imagenUrl:'perfil'"
+    alt="Foto de perfil"
+    class="perfil-img">
+
+  <ng-template #avatarVacio>
+    <div class="avatar-placeholder">
+      <span>{{ user.nombre?.charAt(0)?.toUpperCase() || '?' }}</span>
     </div>
+  </ng-template>
+
+</div>
 
     <div class="perfil-info">
 
