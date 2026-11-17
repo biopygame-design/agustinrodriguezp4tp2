@@ -9,6 +9,8 @@ import {
   UseGuards,
   Patch,
   Req,
+  Param,
+  Get,
 } from '@nestjs/common';
 import { CreateUsuariosDto } from './dto/create-usuarios.dto/create-usuarios.dto';
 import { AuthService } from '../auth/auth.service'; // 👈 Importamos AuthService en vez de UsuariosService
@@ -87,5 +89,32 @@ async actualizarPerfil(
     imagenUrl
   );
 }
+
+// Listar usuarios (solo administradores)
+@Get('usuarios')
+@UseGuards(AuthGuard)
+async listarUsuarios(@Req() req: any) {
+  const adminId = req.user.sub;
+
+  return await this.authService.listarUsuarios(adminId);
+}
+
+// Cambiar el rol de un usuario
+@Patch('usuarios/:id/rol')
+@UseGuards(AuthGuard)
+async cambiarRol(
+  @Req() req: any,
+  @Param('id') id: string,
+  @Body('rol') rol: string
+) {
+  const adminId = req.user.sub;
+
+  return await this.authService.cambiarRol(
+    adminId,
+    id,
+    rol
+  );
+}
+
 
 }

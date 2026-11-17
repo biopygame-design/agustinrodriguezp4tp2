@@ -1,0 +1,59 @@
+
+<div class="admin-container">
+
+  <h1>Administración de usuarios</h1>
+  <p>Gestioná los usuarios y sus permisos.</p>
+
+  <div *ngIf="cargando()" class="mensaje">
+    Cargando usuarios...
+  </div>
+
+  <div *ngIf="error()" class="error">
+    {{ error() }}
+  </div>
+
+  <div class="tabla-container" *ngIf="!cargando() && usuarios().length > 0">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Usuario</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let usuario of usuarios()">
+          <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+          <td>{{ usuario.nombre_usuario }}</td>
+          <td>{{ usuario.correo }}</td>
+
+          <td>
+            <span [class.admin]="usuario.rol === 'admin'">
+              {{ usuario.rol }}
+            </span>
+          </td>
+
+          <td>
+            <button
+              [class.btn-quitar]="usuario.rol === 'admin'"
+              [class.btn-admin]="usuario.rol !== 'admin'"
+              (click)="cambiarRol(usuario)">
+              {{ usuario.rol === 'admin' ? 'Quitar admin' : 'Hacer admin' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div *ngIf="!cargando() && usuarios().length === 0 && !error()">
+    No hay usuarios registrados.
+  </div>
+
+</div>
+

@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException,ForbiddenException,NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose'; // 👈 Faltaba importar Model
+import { Model,Types } from 'mongoose'; // 👈 Faltaba importar Model
 import { JwtService } from '@nestjs/jwt'; // 👈 Necesario para generar el token a 15 min
 import { Usuario } from '../usuarios/usuario.schema';
 import { CreateUsuariosDto } from '../usuarios/dto/create-usuarios.dto/create-usuarios.dto';
@@ -47,7 +47,7 @@ export class AuthService {
       fecha_nacimiento: datos.fecha_nacimiento,
       descripcion_breve: datos.descripcion_breve || '',
       imagenPerfil: imagenUrl || datos.imagenPerfil || '',
-      perfil: datos.perfil || 'usuario',
+      rol: 'usuario',
     });
 
     await nuevoUsuario.save();
@@ -187,6 +187,85 @@ async actualizarPerfil(userId: string, datos: any, imagen?: string) {
   return {
     mensaje: 'Perfil actualizado correctamente',
     usuario: usuarioSinPassword
+  };
+}
+private async verificarAdmin(usuarioId: string) {
+  if (!Types.ObjectId.isValid(usuarioId)) {
+    throw new UnauthorizedException('Usuario inválido');
+  }
+
+  const usuario = await this.usuarioModel.findById(usuarioId);
+
+  if (!usuario || usuario.rol !== 'admin') {
+    throw new ForbiddenException(
+      'No tenés permisos de administrador'
+    );
+  }
+
+  return usuario;
+}
+
+// Listar usuarios
+async listarUsuarios(adminId: string) {
+  await this.verificarAdmin(adminId);
+
+  return await this.usuarioModel
+    .find()
+    .select('-contrasena')
+    .sort({ nombre: 1 });
+}
+
+// Cambiar el rol de otro usuario
+async cambiarRol(
+  adminId: string,
+  usuarioId: string,
+  rol: string
+) {
+  await this.verificarAdmin(adminId);
+
+  if (!Types.ObjectId.isValid(usuarioId)) {
+    throw new BadRequestException('ID de usuario inválido');
+  }
+
+  if (!['usuario', 'admin'].includes(rol)) {
+    throw new BadRequestException('Rol no válido');
+  }
+
+  if (adminId === usuarioId) {
+    throw new BadRequestException(
+      'No podés modificar tu propio rol desde este panel'
+    );
+  }
+
+  const usuario = await this.usuarioModel.findById(usuarioId);
+
+  if (!usuario) {
+    throw new NotFoundException('Usuario no encontrado');
+  }
+
+  if (usuario.rol === 'admin' && rol === 'usuario') {
+    const cantidadAdmins = await this.usuarioModel.countDocuments({
+      rol: 'admin'
+    });
+
+    if (cantidadAdmins <= 1) {
+      throw new BadRequestException(
+        'No podés quitar el rol al último administrador'
+      );
+    }
+  }
+
+  usuario.rol = rol;
+  await usuario.save();
+
+  return {
+    mensaje: 'Rol actualizado correctamente',
+    usuario: {
+      _id: usuario._id,
+      nombre: usuario.nombre,
+      nombre_usuario: usuario.nombre_usuario,
+      rol: usuario.rol
+    }
   };
 }
 

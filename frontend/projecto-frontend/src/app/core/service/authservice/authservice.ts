@@ -99,5 +99,42 @@ async actualizarPerfil(formData: FormData) {
     )
   );
 }
+// --- LISTAR USUARIOS (SOLO ADMIN) ---
+async listarUsuarios() {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return await firstValueFrom(
+    this.http.get(`${this.apiUrl}/usuarios`, { headers })
+  );
+}
+
+// --- CAMBIAR ROL DE USUARIO (SOLO ADMIN) ---
+async cambiarRol(usuarioId: string, rol: string) {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return await firstValueFrom(
+    this.http.patch(
+      `${this.apiUrl}/usuarios/${usuarioId}/rol`,
+      { rol },
+      { headers }
+    )
+  );
+}
 
 }
