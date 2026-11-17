@@ -112,3 +112,14 @@
   border-color: #dc2626 !important;
   color: #b91c1c !important;
 }
+/* Corazón normal */
+.acciones button .corazon {
+  color: #777;
+  font-size: 18px;
+  margin-right: 3px;
+}
+
+/* Corazón rojo cuando el usuario dio like */
+.acciones button.me-gusta-activo .corazon {
+  color: #e53935;
+}

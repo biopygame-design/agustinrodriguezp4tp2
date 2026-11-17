@@ -62,6 +62,7 @@ export class TarjetaPublicaciones {
       }
     }
 
+
     const usuarioId = currentUser?._id || currentUser?.id;
     if (!usuarioId) return;
 
@@ -72,6 +73,32 @@ export class TarjetaPublicaciones {
       error: (err) => console.error('❌ Error HTTP al dar like:', err)
     });
   }
+  leDioLike(): boolean {
+  let currentUser = this.authService.currentUserData() as { _id?: string; id?: string } | null;
+
+  if (!currentUser) {
+    const savedUser = localStorage.getItem('usuario');
+
+    if (savedUser) {
+      try {
+        currentUser = JSON.parse(savedUser);
+      } catch (e) {
+        console.error('Error al recuperar el usuario', e);
+      }
+    }
+  }
+
+  const usuarioId = currentUser?._id || currentUser?.id;
+
+  if (!usuarioId) return false;
+
+  const likes = this.post()?.me_gusta || [];
+
+  return likes.some((like: any) => {
+    const likeId = like?._id || like?.id || like;
+    return String(likeId) === String(usuarioId);
+  });
+}
 
   eliminar(): void {
     let currentUser = this.authService.currentUserData() as { _id?: string; id?: string };

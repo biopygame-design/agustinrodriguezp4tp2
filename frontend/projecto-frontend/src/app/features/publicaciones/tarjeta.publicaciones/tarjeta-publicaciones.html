@@ -23,7 +23,17 @@
   <!-- Botones de Acción -->
   <!-- ⚠️ (click)="$event.stopPropagation() evita que al dar like o eliminar se abra el detalle por error -->
   <div class="acciones" (click)="$event.stopPropagation()">
-    <button (click)="darLike()">❤️ Me gusta ({{ post().me_gusta?.length || 0 }})</button>
+    <button
+  (click)="darLike()"
+  [class.me-gusta-activo]="leDioLike()"
+  type="button">
+
+  <span class="corazon">
+    {{ leDioLike() ? '♥' : '♡' }}
+  </span>
+
+  Me gusta ({{ post().me_gusta?.length || 0 }})
+</button>
     
     @if (puedeEliminar()) {
       <button (click)="eliminar()" class="btn-eliminar">🗑️ Eliminar</button>
