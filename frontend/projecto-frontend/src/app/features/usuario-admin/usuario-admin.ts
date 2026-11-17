@@ -3,11 +3,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/service/authservice/authservice';
 @Component({
-  selector: 'app-usuarios-admin',
+  selector: 'app-usuario-admin',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './usuarios-admin.html',
-  styleUrl: './usuarios-admin.css'
+  templateUrl: './usuario-admin.html',
+  styleUrl: './usuario-admin.css'
 })
 export class UsuariosAdminComponent implements OnInit {
 

@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
@@ -8,23 +9,33 @@ import { authGuard } from './core/guards/authguard/authguard';
 export const routes: Routes = [
   { path: 'login', component: Login, pathMatch: 'full' },
   { path: 'register', component: Register, pathMatch: 'full' },
-  { 
-    path: 'publicaciones', 
-    component: PublicacionesComponent, 
-    pathMatch: 'full', 
-    canActivate: [authGuard] 
-  },
-  // 🚀 NUEVA RUTA CON LAZY LOADING PARA EL DETALLE (recibe el ID por parámetro)
+
   {
-    path: 'publicaciones/:id',
-    loadComponent: () => import('./features/detalle-publicacion/detalle-publicacion').then(m => m.DetallePublicacionComponent),
+    path: 'publicaciones',
+    component: PublicacionesComponent,
+    pathMatch: 'full',
     canActivate: [authGuard]
   },
-  { 
-    path: 'miperfil', 
-    component: MiPerfilComponent, 
-    pathMatch: 'full', 
-    canActivate: [authGuard] 
+  {
+    path: 'publicaciones/:id',
+    loadComponent: () =>
+      import('./features/detalle-publicacion/detalle-publicacion')
+        .then(m => m.DetallePublicacionComponent),
+    canActivate: [authGuard]
   },
+  {
+    path: 'miperfil',
+    component: MiPerfilComponent,
+    pathMatch: 'full',
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin/usuarios',
+    loadComponent: () =>
+      import('./features/usuario-admin/usuario-admin')
+        .then(m => m.UsuariosAdminComponent),
+    canActivate: [authGuard]
+  },
+
   { path: '', redirectTo: 'publicaciones', pathMatch: 'full' }
-]
+];
