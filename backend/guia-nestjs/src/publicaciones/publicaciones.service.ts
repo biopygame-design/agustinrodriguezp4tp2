@@ -281,6 +281,57 @@ async modificarComentario(
   );
 }
 
+async eliminarComentario(
+  postId: string,
+  comentarioId: string,
+  usuarioId: string
+) {
+  if (
+    !Types.ObjectId.isValid(postId) ||
+    !Types.ObjectId.isValid(comentarioId) ||
+    !Types.ObjectId.isValid(usuarioId)
+  ) {
+    throw new NotFoundException('IDs inválidos');
+  }
+
+  const publicacion: any = await this.publicacionModel.findById(postId);
+
+  if (!publicacion || publicacion.activo === false) {
+    throw new NotFoundException('Publicación no encontrada');
+  }
+
+  const comentario = publicacion.comentarios.find(
+    (c: any) => c._id.toString() === comentarioId.toString()
+  );
+
+  if (!comentario) {
+    throw new NotFoundException('Comentario no encontrado');
+  }
+
+  const esCreadorComentario =
+    comentario.usuario.toString() === usuarioId.toString();
+
+  if (!esCreadorComentario) {
+    throw new ForbiddenException(
+      'No tenés permisos para eliminar este comentario'
+    );
+  }
+
+  publicacion.comentarios = publicacion.comentarios.filter(
+    (c: any) => c._id.toString() !== comentarioId.toString()
+  );
+
+  publicacion.markModified('comentarios');
+
+  await publicacion.save();
+
+  return {
+    mensaje: 'Comentario eliminado correctamente',
+    comentarioId
+  };
+}
+
+
 
 
 }

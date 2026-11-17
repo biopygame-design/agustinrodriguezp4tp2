@@ -57,9 +57,21 @@
           <small *ngIf="c.editado" class="text-editado">(Editado)</small>
 
           <!-- Botón de Editar (Solo aparece si el comentario es tuyo) -->
-          <button *ngIf="esMiComentario(c.usuario?._id || c.usuario)" (click)="activarEdicion(c)" class="btn-editar-link">
-            Editar
-          </button>
+         <div *ngIf="esMiComentario(c.usuario?._id || c.usuario)" class="acciones-comentario">
+
+  <button
+    (click)="activarEdicion(c)"
+    class="btn-editar-link">
+    Editar
+  </button>
+
+  <button
+    (click)="eliminarComentario(c._id)"
+    class="btn-eliminar-link">
+    Eliminar
+  </button>
+
+</div>
         </div>
 
         <!-- 2. MODO EDICIÓN (Si SÍ se está editando este comentario) -->

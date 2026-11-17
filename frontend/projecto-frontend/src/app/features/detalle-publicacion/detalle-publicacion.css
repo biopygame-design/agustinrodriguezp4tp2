@@ -1,0 +1,423 @@
+
+/* ================================
+   CONTENEDOR GENERAL
+================================ */
+.detalle-wrapper {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* ================================
+   BOTÓN VOLVER
+================================ */
+.btn-volver {
+  background: #34495e;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 22px;
+  transition: 0.3s ease;
+}
+
+.btn-volver:hover {
+  background: #243342;
+  transform: translateX(-3px);
+}
+
+/* ================================
+   TARJETA DE PUBLICACIÓN
+================================ */
+.card-publicacion-grande {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.header-post {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.header-post strong {
+  color: #2563eb;
+  font-size: 16px;
+}
+
+.fecha {
+  color: #929292;
+  font-size: 12px;
+}
+
+.card-publicacion-grande h2 {
+  font-size: 26px;
+  color: #222;
+  margin: 10px 0 15px;
+  overflow-wrap: anywhere;
+}
+
+.descripcion-grande {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #555;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ================================
+   IMAGEN DE PUBLICACIÓN
+================================ */
+.imagen-container {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  background: #f5f6f8;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.img-grande {
+  width: 100%;
+  max-height: 550px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ================================
+   DIVISOR
+================================ */
+.divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 35px 0;
+}
+
+/* ================================
+   SECCIÓN COMENTARIOS
+================================ */
+.seccion-comentarios {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.seccion-comentarios h3 {
+  font-size: 22px;
+  color: #222;
+  margin: 0 0 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* ================================
+   FORMULARIO NUEVO COMENTARIO
+================================ */
+.form-comentario {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.textarea-comentario {
+  width: 100%;
+  min-height: 85px;
+  padding: 13px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.textarea-comentario:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.textarea-comentario::placeholder {
+  color: #a0a0a0;
+}
+
+/* ================================
+   BOTÓN COMENTAR
+================================ */
+.btn-comentar {
+  align-self: flex-end;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-comentar:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.btn-comentar:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+/* ================================
+   LISTA DE COMENTARIOS
+================================ */
+.lista-comentarios {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comentario-card {
+  background: #f8fafc;
+  border: 1px solid #e8edf3;
+  border-radius: 11px;
+  padding: 17px;
+  transition: box-shadow 0.2s ease;
+}
+
+.comentario-card:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.comentario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.comentario-header strong {
+  color: #2563eb;
+  font-size: 14px;
+}
+
+.comentario-texto {
+  color: #444;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 8px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ================================
+   ETIQUETA EDITADO
+================================ */
+.text-editado {
+  display: inline-block;
+  color: #888;
+  font-size: 11px;
+  font-style: italic;
+  margin-top: 3px;
+}
+
+/* ================================
+   BOTÓN EDITAR
+================================ */
+.btn-editar-link {
+  display: block;
+  margin-top: 10px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-editar-link:hover {
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+/* ================================
+   MODO EDICIÓN
+================================ */
+.form-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.botones-edicion {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Botón guardar */
+.btn-guardar {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 9px 17px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-guardar:hover {
+  background: #15803d;
+}
+
+/* Botón cancelar */
+.btn-cancelar {
+  background: #e5e7eb;
+  color: #374151;
+  border: none;
+  padding: 9px 17px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-cancelar:hover {
+  background: #d1d5db;
+}
+
+/* ================================
+   MENSAJES
+================================ */
+.sin-comentarios,
+.fin-comentarios {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  padding: 20px 10px;
+}
+
+.fin-comentarios {
+  padding-bottom: 0;
+}
+
+/* ================================
+   CARGAR MÁS
+================================ */
+.btn-cargar-mas {
+  display: block;
+  margin: 25px auto 0;
+  background: #eef2ff;
+  color: #2563eb;
+  border: 1px solid #c7d2fe;
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-cargar-mas:hover {
+  background: #dbeafe;
+  transform: translateY(-2px);
+}
+
+/* ================================
+   CARGANDO
+================================ */
+.loading-container {
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #64748b;
+  font-size: 16px;
+}
+
+/* ================================
+   RESPONSIVE - TABLETS Y CELULARES
+================================ */
+@media (max-width: 768px) {
+  .detalle-wrapper {
+    margin: 20px auto;
+    padding: 0 12px;
+  }
+
+  .card-publicacion-grande,
+  .seccion-comentarios {
+    padding: 18px;
+  }
+
+  .card-publicacion-grande h2 {
+    font-size: 22px;
+  }
+
+  .descripcion-grande {
+    font-size: 14px;
+  }
+
+  .img-grande {
+    max-height: 380px;
+  }
+
+  .header-post {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detalle-wrapper {
+    margin: 15px auto;
+  }
+
+  .card-publicacion-grande,
+  .seccion-comentarios {
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .card-publicacion-grande h2 {
+    font-size: 20px;
+  }
+
+  .seccion-comentarios h3 {
+    font-size: 19px;
+  }
+
+  .botones-edicion {
+    flex-direction: column;
+  }
+
+  .btn-guardar,
+  .btn-cancelar {
+    width: 100%;
+  }
+
+  .btn-comentar {
+    width: 100%;
+  }
+
+  .img-grande {
+    max-height: 280px;
+  }
+}

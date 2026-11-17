@@ -101,4 +101,19 @@ export class PublicacionesController {
     const usuarioId = req.user.sub || req.user.id; // Depende de cómo armes el payload del JWT
     return await this.publicacionesService.modificarComentario(postId, comentarioId, usuarioId, texto);
   }
+  @Delete(':postId/comentarios/:comentarioId')
+@UseGuards(AuthGuard)
+async eliminarComentario(
+  @Param('postId') postId: string,
+  @Param('comentarioId') comentarioId: string,
+  @Req() req: any
+) {
+  const usuarioId = req.user.sub || req.user.id;
+
+  return await this.publicacionesService.eliminarComentario(
+    postId,
+    comentarioId,
+    usuarioId
+  );
+}
 }

@@ -62,4 +62,19 @@ export class PublicacionesService {
       body: { usuarioId }
     });
   }
+
+  // 🗑️ Eliminar un comentario (DELETE) enviando el token JWT
+  eliminarComentario(postId: string, comentarioId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+
+    return this.http.delete<any>(
+      `${this.apiUrl}/${postId}/comentarios/${comentarioId}`,
+      { headers }
+    );
+  }
+
 }

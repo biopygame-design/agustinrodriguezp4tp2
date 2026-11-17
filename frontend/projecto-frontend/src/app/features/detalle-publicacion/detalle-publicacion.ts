@@ -143,4 +143,32 @@ export class DetallePublicacionComponent implements OnInit {
       error: (err) => console.error('Error al modificar comentario:', err)
     });
   }
+
+eliminarComentario(comentarioId: string): void {
+  const confirmar = confirm('¿Estás seguro de que querés eliminar este comentario?');
+
+  if (!confirmar) return;
+
+  this.publicacionesService.eliminarComentario(
+    this.publicacionId,
+    comentarioId
+  ).subscribe({
+    next: () => {
+      this.comentarios = this.comentarios.filter(
+        c => c._id !== comentarioId
+      );
+
+      if (this.comentarioEditandoId === comentarioId) {
+        this.cancelarEdicion();
+      }
+
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('Error al eliminar comentario:', err);
+      alert(err.error?.message || 'No se pudo eliminar el comentario');
+    }
+  });
+}
+
 }
