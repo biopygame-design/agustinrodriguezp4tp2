@@ -6,6 +6,7 @@ import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto/create-publicacion.dto';
 import { Put } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth-guard';
+import { ForbiddenException } from '@nestjs/common';
 @Controller('publicaciones')
 export class PublicacionesController {
   constructor(private readonly publicacionesService: PublicacionesService) {}
@@ -48,6 +49,53 @@ export class PublicacionesController {
   async obtenerPerfil(@Param('id') id: string) {
     return await this.publicacionesService.obtenerPerfilUsuario(id);
   }
+  // 📊 ESTADÍSTICAS: publicaciones por usuario
+@Get('estadisticas/publicaciones-por-usuario')
+@UseGuards(AuthGuard)
+async publicacionesPorUsuario(
+  @Query('fechaInicio') fechaInicio: string,
+  @Query('fechaFin') fechaFin: string,
+  @Req() req: any
+) {
+  await this.validarAdmin(req);
+
+  return this.publicacionesService.estadisticasPublicacionesPorUsuario(
+    fechaInicio,
+    fechaFin
+  );
+}
+
+// 📊 ESTADÍSTICAS: cantidad total de comentarios
+@Get('estadisticas/cantidad-comentarios')
+@UseGuards(AuthGuard)
+async cantidadComentarios(
+  @Query('fechaInicio') fechaInicio: string,
+  @Query('fechaFin') fechaFin: string,
+  @Req() req: any
+) {
+  await this.validarAdmin(req);
+
+  return this.publicacionesService.estadisticasCantidadComentarios(
+    fechaInicio,
+    fechaFin
+  );
+}
+
+// 📊 ESTADÍSTICAS: comentarios por publicación
+@Get('estadisticas/comentarios-por-publicacion')
+@UseGuards(AuthGuard)
+async comentariosPorPublicacion(
+  @Query('fechaInicio') fechaInicio: string,
+  @Query('fechaFin') fechaFin: string,
+  @Req() req: any
+) {
+  await this.validarAdmin(req);
+
+  return this.publicacionesService.estadisticasComentariosPorPublicacion(
+    fechaInicio,
+    fechaFin
+  );
+}
 
   // 📌 2. RUTA GENERAL DE DETALLE POR ID
   @Get(':id')
@@ -116,4 +164,16 @@ async eliminarComentario(
     usuarioId
   );
 }
+private async validarAdmin(req: any) {
+  const usuarioId = req.user?.sub || req.user?.id || req.user?._id;
+
+  if (!usuarioId) {
+    throw new ForbiddenException('Usuario no autorizado');
+  }
+
+  await this.publicacionesService.verificarAdmin(usuarioId);
+
+  return usuarioId;
+}
+
 }

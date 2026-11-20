@@ -1,0 +1,92 @@
+
+<div class="dashboard-estadisticas">
+
+  <h1>Dashboard de estadísticas</h1>
+  <p class="subtitulo">Consultá la actividad de las publicaciones y comentarios.</p>
+
+  <!-- FILTRO DE FECHAS -->
+  <section class="filtros">
+
+    <div class="campo">
+      <label for="fechaInicio">Fecha de inicio</label>
+      <input
+        id="fechaInicio"
+        type="date"
+        [(ngModel)]="fechaInicio">
+    </div>
+
+    <div class="campo">
+      <label for="fechaFin">Fecha de fin</label>
+      <input
+        id="fechaFin"
+        type="date"
+        [(ngModel)]="fechaFin">
+    </div>
+
+    <button
+      type="button"
+      (click)="cargarEstadisticas()"
+      [disabled]="cargando">
+      {{ cargando ? 'Cargando...' : 'Aplicar filtros' }}
+    </button>
+
+  </section>
+
+  @if (error) {
+    <p class="mensaje-error">{{ error }}</p>
+  }
+
+  @if (cargando) {
+    <p class="cargando">Cargando estadísticas...</p>
+  }
+
+  <!-- TOTAL DE COMENTARIOS -->
+  <section class="resumen">
+    <div class="tarjeta-resumen">
+      <h3>Total de comentarios</h3>
+      <p>{{ totalComentarios }}</p>
+    </div>
+  </section>
+
+  <!-- GRÁFICOS -->
+  <section class="graficos">
+
+    <div class="grafico">
+      <h2>Publicaciones por usuario</h2>
+      <div class="contenedor-chart">
+        <canvas
+          baseChart
+          [type]="'bar'"
+          [data]="publicacionesPorUsuario"
+          [options]="opcionesPublicaciones">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="grafico">
+      <h2>Cantidad de comentarios</h2>
+      <div class="contenedor-chart">
+        <canvas
+          baseChart
+          [type]="'doughnut'"
+          [data]="comentariosTotales"
+          [options]="opcionesComentarios">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="grafico grafico-completo">
+      <h2>Comentarios por publicación</h2>
+      <div class="contenedor-chart">
+        <canvas
+          baseChart
+          [type]="'bar'"
+          [data]="comentariosPorPublicacion"
+          [options]="opcionesComentariosPublicacion">
+        </canvas>
+      </div>
+    </div>
+
+  </section>
+
+</div>

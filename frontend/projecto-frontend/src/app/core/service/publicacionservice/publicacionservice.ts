@@ -76,5 +76,58 @@ export class PublicacionesService {
       { headers }
     );
   }
+    // 📊 PUBLICACIONES POR USUARIO
+  obtenerPublicacionesPorUsuario(fechaInicio: string, fechaFin: string): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+
+    const params = new HttpParams()
+      .set('fechaInicio', fechaInicio)
+      .set('fechaFin', fechaFin);
+
+    return this.http.get<any>(
+      `${this.apiUrl}/estadisticas/publicaciones-por-usuario`,
+      { headers, params }
+    );
+  }
+
+  // 📊 CANTIDAD TOTAL DE COMENTARIOS
+  obtenerCantidadComentarios(fechaInicio: string, fechaFin: string): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+
+    const params = new HttpParams()
+      .set('fechaInicio', fechaInicio)
+      .set('fechaFin', fechaFin);
+
+    return this.http.get<any>(
+      `${this.apiUrl}/estadisticas/cantidad-comentarios`,
+      { headers, params }
+    );
+  }
+
+  // 📊 COMENTARIOS POR PUBLICACIÓN
+  obtenerComentariosPorPublicacion(fechaInicio: string, fechaFin: string): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+
+    const params = new HttpParams()
+      .set('fechaInicio', fechaInicio)
+      .set('fechaFin', fechaFin);
+
+    return this.http.get<any>(
+      `${this.apiUrl}/estadisticas/comentarios-por-publicacion`,
+      { headers, params }
+    );
+  }
 
 }
