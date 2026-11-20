@@ -31,6 +31,7 @@ export class Usuario extends Document {
   rol: string;
   @Prop({ default: true })
   activo: boolean;
+  
 }
 
 

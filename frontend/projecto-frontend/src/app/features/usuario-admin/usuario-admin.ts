@@ -56,4 +56,39 @@ export class UsuariosAdminComponent implements OnInit {
       alert(error.error?.message || 'No se pudo cambiar el rol.');
     }
   }
+  // --- DESHABILITAR USUARIO ---
+async deshabilitarUsuario(usuario: any) {
+  const confirmado = confirm(
+    `¿Querés deshabilitar la cuenta de ${usuario.nombre}?`
+  );
+
+  if (!confirmado) return;
+
+  try {
+    await this.authService.deshabilitarUsuario(usuario._id);
+    await this.cargarUsuarios();
+    alert('Usuario deshabilitado correctamente.');
+  } catch (error: any) {
+    console.error('Error al deshabilitar usuario:', error);
+    alert(error.error?.message || 'No se pudo deshabilitar el usuario.');
+  }
+}
+
+// --- REACTIVAR USUARIO ---
+async activarUsuario(usuario: any) {
+  const confirmado = confirm(
+    `¿Querés reactivar la cuenta de ${usuario.nombre}?`
+  );
+
+  if (!confirmado) return;
+
+  try {
+    await this.authService.activarUsuario(usuario._id);
+    await this.cargarUsuarios();
+    alert('Usuario reactivado correctamente.');
+  } catch (error: any) {
+    console.error('Error al reactivar usuario:', error);
+    alert(error.error?.message || 'No se pudo reactivar el usuario.');
+  }
+}
 }

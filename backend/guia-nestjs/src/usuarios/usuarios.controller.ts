@@ -11,6 +11,7 @@ import {
   Req,
   Param,
   Get,
+  Delete
 } from '@nestjs/common';
 import { CreateUsuariosDto } from './dto/create-usuarios.dto/create-usuarios.dto';
 import { AuthService } from '../auth/auth.service'; // 👈 Importamos AuthService en vez de UsuariosService
@@ -149,6 +150,35 @@ async cambiarRol(
     adminId,
     id,
     rol
+  );
+}
+// Deshabilitar usuario (baja lógica)
+@Delete('usuarios/:id')
+@UseGuards(AuthGuard)
+async deshabilitarUsuario(
+  @Req() req: any,
+  @Param('id') id: string
+) {
+  const adminId = req.user.sub;
+
+  return await this.authService.deshabilitarUsuario(
+    adminId,
+    id
+  );
+}
+
+// Reactivar usuario
+@Post('usuarios/:id/activar')
+@UseGuards(AuthGuard)
+async activarUsuario(
+  @Req() req: any,
+  @Param('id') id: string
+) {
+  const adminId = req.user.sub;
+
+  return await this.authService.activarUsuario(
+    adminId,
+    id
   );
 }
 

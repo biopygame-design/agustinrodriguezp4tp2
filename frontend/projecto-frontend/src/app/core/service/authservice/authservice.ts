@@ -155,5 +155,45 @@ async crearUsuarioAdmin(formData: FormData) {
     )
   );
 }
+// --- DESHABILITAR USUARIO (SOLO ADMIN) ---
+async deshabilitarUsuario(usuarioId: string) {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return await firstValueFrom(
+    this.http.delete(
+      `${this.apiUrl}/usuarios/${usuarioId}`,
+      { headers }
+    )
+  );
+}
+
+// --- REACTIVAR USUARIO (SOLO ADMIN) ---
+async activarUsuario(usuarioId: string) {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return await firstValueFrom(
+    this.http.post(
+      `${this.apiUrl}/usuarios/${usuarioId}/activar`,
+      {},
+      { headers }
+    )
+  );
+}
 
 }

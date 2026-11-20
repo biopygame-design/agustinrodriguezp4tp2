@@ -14,42 +14,66 @@
 
   <div class="tabla-container" *ngIf="!cargando() && usuarios().length > 0">
 
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Usuario</th>
-          <th>Correo</th>
-          <th>Rol</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Usuario</th>
+        <th>Correo</th>
+        <th>Rol</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
 
-      <tbody>
-        <tr *ngFor="let usuario of usuarios()">
-          <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
-          <td>{{ usuario.nombre_usuario }}</td>
-          <td>{{ usuario.correo }}</td>
+    <tbody>
+      <tr *ngFor="let usuario of usuarios()">
 
-          <td>
-            <span [class.admin]="usuario.rol === 'admin'">
-              {{ usuario.rol }}
-            </span>
-          </td>
+        <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+        <td>{{ usuario.nombre_usuario }}</td>
+        <td>{{ usuario.correo }}</td>
 
-          <td>
-            <button
-              [class.btn-quitar]="usuario.rol === 'admin'"
-              [class.btn-admin]="usuario.rol !== 'admin'"
-              (click)="cambiarRol(usuario)">
-              {{ usuario.rol === 'admin' ? 'Quitar admin' : 'Hacer admin' }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <td>
+          <span [class.admin]="usuario.rol === 'admin'">
+            {{ usuario.rol }}
+          </span>
+        </td>
 
-  </div>
+        <td>
+          <span [class.activo]="usuario.activo !== false"
+                [class.inactivo]="usuario.activo === false">
+            {{ usuario.activo === false ? 'Deshabilitado' : 'Habilitado' }}
+          </span>
+        </td>
+
+        <td>
+          <button
+            [class.btn-quitar]="usuario.rol === 'admin'"
+            [class.btn-admin]="usuario.rol !== 'admin'"
+            (click)="cambiarRol(usuario)">
+            {{ usuario.rol === 'admin' ? 'Quitar admin' : 'Hacer admin' }}
+          </button>
+
+          <button
+            *ngIf="usuario.activo !== false"
+            class="btn-deshabilitar"
+            (click)="deshabilitarUsuario(usuario)">
+            Deshabilitar
+          </button>
+
+          <button
+            *ngIf="usuario.activo === false"
+            class="btn-activar"
+            (click)="activarUsuario(usuario)">
+            Reactivar
+          </button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+</div>
 
   <div *ngIf="!cargando() && usuarios().length === 0 && !error()">
     No hay usuarios registrados.

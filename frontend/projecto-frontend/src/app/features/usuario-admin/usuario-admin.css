@@ -74,3 +74,24 @@ button:hover {
   color: #dc3545;
   margin: 15px 0;
 }
+.activo {
+  color: green;
+  font-weight: bold;
+}
+
+.inactivo {
+  color: red;
+  font-weight: bold;
+}
+
+.btn-deshabilitar {
+  background-color: #dc3545;
+  color: white;
+  margin-left: 5px;
+}
+
+.btn-activar {
+  background-color: #198754;
+  color: white;
+  margin-left: 5px;
+}

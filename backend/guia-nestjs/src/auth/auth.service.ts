@@ -151,6 +151,11 @@ export class AuthService {
     if (!usuario) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
+    if (usuario.activo === false) {
+  throw new ForbiddenException(
+    'Tu cuenta está deshabilitada. Contactá a un administrador.'
+  );
+}
 
     // 2. Comparar la contraseña ingresada con el hash de bcrypt
     const esPasswordValida = await bcrypt.compare(contrasenaPlana, usuario.contrasena);
@@ -328,6 +333,91 @@ async cambiarRol(
       nombre: usuario.nombre,
       nombre_usuario: usuario.nombre_usuario,
       rol: usuario.rol
+    }
+  };
+}
+// Deshabilitar usuario (baja lógica)
+async deshabilitarUsuario(adminId: string, usuarioId: string) {
+  await this.verificarAdmin(adminId);
+
+  if (!Types.ObjectId.isValid(usuarioId)) {
+    throw new BadRequestException('ID de usuario inválido');
+  }
+
+  if (adminId === usuarioId) {
+    throw new BadRequestException(
+      'No podés deshabilitar tu propia cuenta'
+    );
+  }
+
+  const usuario = await this.usuarioModel.findById(usuarioId);
+
+  if (!usuario) {
+    throw new NotFoundException('Usuario no encontrado');
+  }
+
+  if (usuario.activo === false) {
+    throw new BadRequestException('El usuario ya está deshabilitado');
+  }
+
+  // Evitar deshabilitar al último administrador activo
+  if (usuario.rol === 'admin') {
+    const cantidadAdminsActivos = await this.usuarioModel.countDocuments({
+      rol: 'admin',
+      activo: { $ne: false }
+    });
+
+    if (cantidadAdminsActivos <= 1) {
+      throw new BadRequestException(
+        'No podés deshabilitar al último administrador'
+      );
+    }
+  }
+
+  usuario.activo = false;
+  await usuario.save();
+
+  return {
+    mensaje: 'Usuario deshabilitado correctamente',
+    usuario: {
+      _id: usuario._id,
+      nombre: usuario.nombre,
+      nombre_usuario: usuario.nombre_usuario,
+      rol: usuario.rol,
+      activo: usuario.activo
+    }
+  };
+}
+
+// Reactivar usuario
+async activarUsuario(adminId: string, usuarioId: string) {
+  await this.verificarAdmin(adminId);
+
+  if (!Types.ObjectId.isValid(usuarioId)) {
+    throw new BadRequestException('ID de usuario inválido');
+  }
+
+  const usuario = await this.usuarioModel.findById(usuarioId);
+
+  if (!usuario) {
+    throw new NotFoundException('Usuario no encontrado');
+  }
+
+  if (usuario.activo !== false) {
+    throw new BadRequestException('El usuario ya está habilitado');
+  }
+
+  usuario.activo = true;
+  await usuario.save();
+
+  return {
+    mensaje: 'Usuario reactivado correctamente',
+    usuario: {
+      _id: usuario._id,
+      nombre: usuario.nombre,
+      nombre_usuario: usuario.nombre_usuario,
+      rol: usuario.rol,
+      activo: usuario.activo
     }
   };
 }
