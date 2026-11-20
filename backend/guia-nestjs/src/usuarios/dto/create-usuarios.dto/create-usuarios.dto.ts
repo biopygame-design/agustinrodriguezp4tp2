@@ -41,4 +41,9 @@ export class CreateUsuariosDto {
   @IsOptional()
   @IsIn(['usuario', 'administrador'], { message: 'El perfil debe ser usuario o administrador' })
   perfil?: string; // Por defecto será "usuario" en el servicio o esquema
+  @IsOptional()
+@IsIn(['usuario', 'admin'], {
+  message: 'El rol debe ser usuario o admin'
+})
+rol?: string;
 }

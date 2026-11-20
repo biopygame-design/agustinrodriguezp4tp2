@@ -70,6 +70,69 @@ export class AuthService {
       usuario: resto 
     };
   }
+  async crearDesdeAdmin(
+  adminId: string,
+  datos: CreateUsuariosDto,
+  imagenUrl?: string
+) {
+  // Verificamos que quien realiza la operación sea administrador
+  await this.verificarAdmin(adminId);
+
+  const passwordPlana =
+    datos.contrasena || (datos as any).password;
+
+  if (!passwordPlana) {
+    throw new BadRequestException(
+      'La contraseña es obligatoria'
+    );
+  }
+
+  if (!['usuario', 'admin'].includes(datos.rol || 'usuario')) {
+    throw new BadRequestException('Rol no válido');
+  }
+
+  // Comprobar si ya existe el correo o nombre de usuario
+  const usuarioExistente = await this.usuarioModel.findOne({
+    $or: [
+      { correo: datos.correo.trim().toLowerCase() },
+      { nombre_usuario: datos.nombre_usuario.trim().toLowerCase() }
+    ]
+  });
+
+  if (usuarioExistente) {
+    throw new BadRequestException(
+      'El correo o nombre de usuario ya están registrados'
+    );
+  }
+
+  // Encriptar contraseña
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(passwordPlana, salt);
+
+  // Crear usuario con el rol elegido por el administrador
+  const nuevoUsuario = new this.usuarioModel({
+    nombre: datos.nombre.trim(),
+    apellido: datos.apellido.trim(),
+    correo: datos.correo.trim().toLowerCase(),
+    nombre_usuario: datos.nombre_usuario.trim().toLowerCase(),
+    contrasena: hashedPassword,
+    fecha_nacimiento: datos.fecha_nacimiento,
+    descripcion_breve: datos.descripcion_breve || '',
+    imagenPerfil: imagenUrl || '',
+    rol: datos.rol || 'usuario',
+    activo: true
+  });
+
+  await nuevoUsuario.save();
+
+  const usuarioObj = nuevoUsuario.toObject();
+  const { contrasena, ...usuarioSinPassword } = usuarioObj;
+
+  return {
+    mensaje: 'Usuario creado correctamente',
+    usuario: usuarioSinPassword
+  };
+}
 
   async login(identificador: string, contrasenaPlana: string) {
     // 🛡️ Validación preventiva por si algún campo llega vacío o undefined

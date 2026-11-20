@@ -98,6 +98,42 @@ async listarUsuarios(@Req() req: any) {
 
   return await this.authService.listarUsuarios(adminId);
 }
+// Crear usuario desde el panel de administración
+@Post('usuarios')
+@UseGuards(AuthGuard)
+@UseInterceptors(
+  FileInterceptor('imagen', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, callback) => {
+        const uniqueSuffix =
+          Date.now() + '-' + Math.round(Math.random() * 1e9);
+
+        callback(
+          null,
+          `${uniqueSuffix}${extname(file.originalname)}`
+        );
+      }
+    })
+  })
+)
+async crearUsuarioAdmin(
+  @Req() req: any,
+  @Body() datos: CreateUsuariosDto,
+  @UploadedFile() file?: Express.Multer.File
+) {
+  const adminId = req.user.sub;
+
+  const imagenUrl = file
+    ? `/uploads/${file.filename}`
+    : '';
+
+  return await this.authService.crearDesdeAdmin(
+    adminId,
+    datos,
+    imagenUrl
+  );
+}
 
 // Cambiar el rol de un usuario
 @Patch('usuarios/:id/rol')

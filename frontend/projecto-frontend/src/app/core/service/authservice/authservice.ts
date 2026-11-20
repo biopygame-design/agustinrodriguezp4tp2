@@ -136,5 +136,24 @@ async cambiarRol(usuarioId: string, rol: string) {
     )
   );
 }
+async crearUsuarioAdmin(formData: FormData) {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return await firstValueFrom(
+    this.http.post(
+      `${this.apiUrl}/usuarios`,
+      formData,
+      { headers }
+    )
+  );
+}
 
 }

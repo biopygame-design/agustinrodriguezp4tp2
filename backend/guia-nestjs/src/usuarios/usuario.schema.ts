@@ -29,7 +29,11 @@ export class Usuario extends Document {
   
   @Prop({ default: 'usuario' }) // 👈 Agregado para controlar los permisos de admin
   rol: string;
+  @Prop({ default: true })
+  activo: boolean;
 }
+
+
 
 
 

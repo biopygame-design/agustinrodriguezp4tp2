@@ -5,6 +5,7 @@ import { Register } from './features/auth/register/register';
 import { PublicacionesComponent } from './features/publicaciones/publicaciones';
 import { MiPerfilComponent } from './pages/miperfil/miperfil';
 import { authGuard } from './core/guards/authguard/authguard';
+import { CrearUsuarioAdminComponent } from './features/crear-usuario-admin/crear-usuario-admin';
 
 export const routes: Routes = [
   { path: 'login', component: Login, pathMatch: 'full' },
@@ -37,5 +38,14 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
-  { path: '', redirectTo: 'publicaciones', pathMatch: 'full' }
+  { path: '', redirectTo: 'publicaciones', pathMatch: 'full' },
+  {
+  path: 'admin/crear-usuario',
+  loadComponent: () =>
+    import('./features/crear-usuario-admin/crear-usuario-admin')
+      .then(m => m.CrearUsuarioAdminComponent),
+  canActivate: [authGuard]
+},
+
 ];
+
