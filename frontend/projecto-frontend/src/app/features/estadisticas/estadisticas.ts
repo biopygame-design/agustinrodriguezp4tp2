@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { PublicacionesService } from '../../core/service/publicacionservice/publicacionservice';
+import {
+  Chart,
+  registerables
+} from 'chart.js';
 
 @Component({
   selector: 'app-estadisticas',
@@ -90,6 +94,9 @@ export class Estadisticas implements OnInit {
       }
     }
   };
+  constructor() {
+  Chart.register(...registerables);
+}
 
   ngOnInit(): void {
     const hoy = new Date();
