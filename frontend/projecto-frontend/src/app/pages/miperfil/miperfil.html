@@ -7,26 +7,15 @@
     </a>
   </div>
 
+  <!-- PERFIL DEL USUARIO -->
   <div class="perfil-card" *ngIf="usuarioData() as user">
 
-    <
-<div class="avatar-container">
-
-  <img
-    [src]="user.imagenPerfil | imagenUrl:'perfil'"
-    alt="Foto de perfil"
-    class="perfil-img">
-
-</div>
-
-
-  <ng-template #avatarVacio>
-    <div class="avatar-placeholder">
-      <span>{{ user.nombre?.charAt(0)?.toUpperCase() || '?' }}</span>
+    <div class="avatar-container">
+      <img
+        [src]="user.imagenPerfil | imagenUrl:'perfil'"
+        alt="Foto de perfil"
+        class="perfil-img">
     </div>
-  </ng-template>
-
-</div>
 
     <div class="perfil-info">
 
@@ -217,6 +206,7 @@
 
 </div>
 
+<!-- CARGANDO -->
 <ng-template #cargando>
   <div class="loading-spinner">
     <p>Cargando información del perfil...</p>
