@@ -123,3 +123,10 @@
 .acciones button.me-gusta-activo .corazon {
   color: #e53935;
 }
+.titulo-publicacion {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  box-sizing: border-box;
+}
