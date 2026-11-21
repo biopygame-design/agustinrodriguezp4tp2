@@ -1,4 +1,3 @@
-
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -15,21 +14,19 @@ export class ImagenUrlPipe implements PipeTransform {
   ): string {
 
     if (!ruta || ruta.trim() === '') {
-  return tipo === 'perfil'
-    ? 'assets/default-avatar.png'
-    : 'assets/default-post.png';
-}
-    // Si la imagen ya tiene una URL completa
+      return tipo === 'perfil'
+        ? '/assets/default-avatar.png'
+        : '';
+    }
+
     if (ruta.startsWith('http')) {
       return ruta;
     }
 
-    // Si la ruta ya contiene /uploads/
     if (ruta.startsWith('/uploads/')) {
       return `${this.baseUrl}${ruta}`;
     }
 
-    // Si solamente recibimos el nombre del archivo
     return `${this.baseUrl}/uploads/${ruta}`;
   }
 }
