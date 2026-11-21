@@ -135,19 +135,27 @@ export class Register {
       formData.append('imagen', this.selectedFile);
     }
 
-    try {
-      const { data, error } = await this.authService.register(formData);
+   try {
+  const { data, error } = await this.authService.register(formData);
 
-      if (error) throw error;
+  if (error) throw error;
 
-      this.successMessage.set('¡Registro exitoso!');
-      this.registerForm.reset();
+  // Iniciar sesión automáticamente
+  const { data: loginData, error: loginError } =
+    await this.authService.signIn(
+      values.correo!,
+      values.password!
+    );
 
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 1500);
+  if (loginError) throw loginError;
 
-    } catch (error: any) {
+  this.successMessage.set('¡Registro exitoso!');
+
+  this.registerForm.reset();
+
+  await this.router.navigate(['/publicaciones']);
+
+} catch (error: any) {
       this.errorMessage.set(
         error.message || 'Error al registrarse en el servidor'
       );
