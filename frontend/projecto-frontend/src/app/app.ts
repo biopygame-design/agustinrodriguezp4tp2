@@ -33,11 +33,24 @@ export class App implements OnInit {
 
   // Validar sesión al iniciar la aplicación
   validarSesion(): void {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
-    if (!token) {
-      this.cargando = false;
-      this.router.navigate(['/login']);
+  if (!token) {
+    this.cargando = false;
+    this.router.navigate(['/login']);
+    return;
+  }
+
+  try {
+    const payload = JSON.parse(
+      atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))
+    );
+
+    const tiempoRestante = (payload.exp * 1000) - Date.now();
+
+    // Si el token venció realmente
+    if (!payload.exp || tiempoRestante <= 0) {
+      this.cerrarSesionYIrALogin();
       return;
     }
 
@@ -51,11 +64,26 @@ export class App implements OnInit {
         this.iniciarTemporizadorSesion();
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.cerrarSesionYIrALogin();
+      error: (error) => {
+        console.error('Error validando sesión:', error);
+
+        if (error.status === 401 || error.status === 403) {
+          this.cerrarSesionYIrALogin();
+        } else {
+          // Si el servidor tiene un problema temporal,
+          // no eliminamos un token que todavía no venció.
+          this.cargando = false;
+          this.iniciarTemporizadorSesion();
+          this.cdr.detectChanges();
+        }
       }
     });
+
+  } catch (error) {
+    console.error('Token inválido:', error);
+    this.cerrarSesionYIrALogin();
   }
+}
 
   // Iniciar temporizador
   iniciarTemporizadorSesion(): void {
@@ -90,12 +118,17 @@ export class App implements OnInit {
     // Mostrar el modal 90 segundos antes del vencimiento
     const tiempoParaModal = Math.max(0, tiempoRestante - 90 * 1000);
 
-    this.sessionTimer = setTimeout(() => {
-      this.ngZone.run(() => {
-        this.mostrarModal = true;
-        this.cdr.detectChanges();
-      });
-    }, tiempoParaModal);
+// Comprobamos si el usuario ya tomó una decisión
+const decisionTomada = sessionStorage.getItem('decision_modal');
+
+if (!decisionTomada) {
+  this.sessionTimer = setTimeout(() => {
+    this.ngZone.run(() => {
+      this.mostrarModal = true;
+      this.cdr.detectChanges();
+    });
+  }, tiempoParaModal);
+}
 
     // Cerrar la sesión cuando realmente venza el JWT
     this.expiryTimer = setTimeout(() => {
@@ -124,9 +157,11 @@ export class App implements OnInit {
     this.http.post<any>(`${this.apiUrl}/refrescar`, {}, { headers }).subscribe({
       next: (res) => {
         const tokenNuevo = res.token || res.data?.token;
+        
 
         if (tokenNuevo) {
           localStorage.setItem('token', tokenNuevo);
+          sessionStorage.removeItem('decision_modal');
           this.mostrarModal = false;
           this.iniciarTemporizadorSesion();
           this.cdr.detectChanges();
@@ -157,6 +192,7 @@ export class App implements OnInit {
   localStorage.removeItem('token');
   localStorage.removeItem('usuario');
   localStorage.removeItem('sesion_activa');
+  sessionStorage.removeItem('decision_modal');
 
   this.mostrarModal = false;
   this.cargando = false;
