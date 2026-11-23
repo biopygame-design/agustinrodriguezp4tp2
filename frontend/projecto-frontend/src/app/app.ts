@@ -16,6 +16,7 @@ export class App implements OnInit {
   cargando = true;
   mostrarModal = false;
   private sessionTimer: any;
+  private expiryTimer: any;
 
   private apiUrl = 'https://agustinrodriguezp4tp2.onrender.com/api/auth';
 
@@ -58,19 +59,55 @@ export class App implements OnInit {
 
   // Iniciar temporizador
   iniciarTemporizadorSesion(): void {
-    if (this.sessionTimer) {
-      clearTimeout(this.sessionTimer);
+  if (this.sessionTimer) {
+    clearTimeout(this.sessionTimer);
+  }
+
+  if (this.expiryTimer) {
+    clearTimeout(this.expiryTimer);
+  }
+
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    this.cerrarSesionYIrALogin();
+    return;
+  }
+
+  try {
+    // Leer la fecha de vencimiento del JWT
+    const payload = JSON.parse(
+      atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))
+    );
+
+    const tiempoRestante = (payload.exp * 1000) - Date.now();
+
+    if (!payload.exp || tiempoRestante <= 0) {
+      this.cerrarSesionYIrALogin();
+      return;
     }
+
+    // Mostrar el modal 90 segundos antes del vencimiento
+    const tiempoParaModal = Math.max(0, tiempoRestante - 90 * 1000);
 
     this.sessionTimer = setTimeout(() => {
       this.ngZone.run(() => {
         this.mostrarModal = true;
         this.cdr.detectChanges();
-        console.log('⏰ Modal de sesión mostrado');
       });
-    }, 90 * 1000);
-  }
+    }, tiempoParaModal);
 
+    // Cerrar la sesión cuando realmente venza el JWT
+    this.expiryTimer = setTimeout(() => {
+      this.ngZone.run(() => {
+        this.cerrarSesionYIrALogin();
+      });
+    }, tiempoRestante);
+
+  } catch {
+    this.cerrarSesionYIrALogin();
+  }
+}
   // Extender sesión
   extenderSesion(): void {
     const token = localStorage.getItem('token');
@@ -112,6 +149,10 @@ export class App implements OnInit {
     clearTimeout(this.sessionTimer);
     this.sessionTimer = null;
   }
+  if (this.expiryTimer) {
+  clearTimeout(this.expiryTimer);
+  this.expiryTimer = null;
+}
 
   localStorage.removeItem('token');
   localStorage.removeItem('usuario');
@@ -127,5 +168,11 @@ export class App implements OnInit {
   }).then((navego) => {
     console.log('Resultado de navegación:', navego);
   });
+}
+noContinuarSesion(): void {
+  // Solamente ocultamos el modal.
+  // El token permanece guardado hasta su vencimiento.
+  this.mostrarModal = false;
+  this.cdr.detectChanges();
 }
 }
