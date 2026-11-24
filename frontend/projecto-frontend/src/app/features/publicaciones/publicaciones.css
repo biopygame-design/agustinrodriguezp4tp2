@@ -1,208 +1,344 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #020a06;
+  background-image: 
+    radial-gradient(circle at top center, #072215 0%, #010503 100%);
+  padding: 20px 0 40px;
+  position: relative;
+}
+
+/* Líneas de escaneo CRT sutiles sobre todo el muro */
+:host::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.35) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+
 /* Contenedor general del muro */
 .muro-container {
-  max-width: 650px;
-  margin: 30px auto;
+  max-width: 680px;
+  margin: 0 auto;
   padding: 0 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #0f1419;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  color: #39ff9c;
+  position: relative;
+  z-index: 2;
 }
 
 /* Título principal del muro */
 .muro-container > h2 {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 16px;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
   text-align: center;
-  color: #111;
+  color: #5cffad;
+  text-shadow: 0 0 12px rgba(57, 255, 156, 0.7);
+  border-bottom: 1px solid #1b7a4a;
+  padding-bottom: 12px;
 }
 
-/* Barra de navegación superior (Mi Perfil / Cerrar Sesión) */
+.muro-container > h2::before {
+  content: "// ";
+  color: #24b36b;
+}
+
+/* Barra de navegación superior (Mi Perfil / Admin / Cerrar Sesión) */
 .acciones-nav {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 24px;
 }
 
-.btn-perfil, .btn-logout {
+.btn-perfil, .btn-logout, .btn-admin {
   padding: 8px 16px;
-  border-radius: 20px;
+  border-radius: 2px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid #cfd9de;
 }
 
 .btn-perfil {
-  background-color: #f7f9f9;
-  color: #0f1419;
+  background-color: rgba(57, 255, 156, 0.1);
+  color: #39ff9c;
+  border: 1px solid #24b36b;
 }
 
 .btn-perfil:hover {
-  background-color: #eff3f4;
+  background-color: #39ff9c;
+  color: #020a06;
+  box-shadow: 0 0 12px rgba(57, 255, 156, 0.6);
+}
+
+.btn-admin {
+  display: inline-block;
+  background-color: rgba(255, 184, 0, 0.12);
+  color: #ffca28;
+  border: 1px solid #ffb300;
+}
+
+.btn-admin:hover {
+  background-color: #ffb300;
+  color: #020a06;
+  box-shadow: 0 0 12px rgba(255, 179, 0, 0.6);
 }
 
 .btn-logout {
-  background-color: #fff;
-  color: #dc2626;
-  border-color: #fca5a5;
+  background-color: rgba(255, 59, 59, 0.12);
+  color: #ff6b6b;
+  border: 1px solid #ff3b3b;
 }
 
 .btn-logout:hover {
-  background-color: #fee2e2;
+  background-color: #ff3b3b;
+  color: #020a06;
+  box-shadow: 0 0 12px rgba(255, 59, 59, 0.6);
 }
 
 /* 1️⃣ Tarjeta para crear publicación */
 .crear-post-card {
-  background: #ffffff;
-  border: 1px solid #e1e8ed;
-  border-radius: 12px;
-  padding: 20px;
+  background: rgba(3, 18, 11, 0.94);
+  background-image: 
+    linear-gradient(to right, rgba(57, 255, 156, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(57, 255, 156, 0.04) 1px, transparent 1px);
+  background-size: 18px 18px;
+  border: 2px solid #24b36b;
+  border-radius: 2px;
+  padding: 22px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 
+    0 0 22px rgba(57, 255, 156, 0.15),
+    inset 0 0 16px rgba(57, 255, 156, 0.08);
 }
 
 .crear-post-card h3 {
   font-size: 18px;
-  margin-bottom: 14px;
-  color: #333;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: #5cffad;
+  text-shadow: 0 0 6px rgba(57, 255, 156, 0.5);
+}
+
+.crear-post-card h3::before {
+  content: "> ";
+  color: #24b36b;
 }
 
 .form-group {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .input-field, .textarea-field {
   width: 100%;
   padding: 12px;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
-  font-size: 14px;
+  background-color: #010805;
+  color: #5cffad;
+  border: 1px solid #24b36b;
+  border-radius: 2px;
+  font-size: 15px;
+  letter-spacing: 0.5px;
   outline: none;
   box-sizing: border-box;
-  font-family: inherit;
-  transition: border-color 0.2s;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field::placeholder, .textarea-field::placeholder {
+  color: #196b42;
 }
 
 .input-field:focus, .textarea-field:focus {
-  border-color: #4f46e5;
+  border-color: #5cffad;
+  box-shadow: 0 0 10px rgba(57, 255, 156, 0.35);
 }
 
 .textarea-field {
   resize: vertical;
-  min-height: 80px;
+  min-height: 85px;
 }
 
 .file-group {
   font-size: 13px;
-  color: #555;
+  letter-spacing: 1px;
+  color: #24b36b;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .file-group input[type="file"] {
-  padding: 4px 0;
+  padding: 6px;
+  background: #010805;
+  border: 1px dashed #1b7a4a;
+  color: #39ff9c;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.file-group input[type="file"]::file-selector-button {
+  background: rgba(57, 255, 156, 0.15);
+  border: 1px solid #39ff9c;
+  color: #39ff9c;
+  font-family: 'Share Tech Mono', monospace;
+  padding: 4px 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.file-group input[type="file"]::file-selector-button:hover {
+  background: #39ff9c;
+  color: #020a06;
 }
 
 /* Botón principal de Publicar */
 .btn-publicar {
-  background-color: #4f46e5;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 15px;
+  background-color: rgba(57, 255, 156, 0.14);
+  color: #39ff9c;
+  border: 2px solid #39ff9c;
+  padding: 11px 20px;
+  border-radius: 2px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
   width: 100%;
-  margin-top: 6px;
+  margin-top: 8px;
+  text-shadow: 0 0 6px rgba(57, 255, 156, 0.5);
 }
 
 .btn-publicar:hover:not(:disabled) {
-  background-color: #4338ca;
+  background-color: #39ff9c;
+  color: #020a06;
+  box-shadow: 0 0 16px rgba(57, 255, 156, 0.75);
+  text-shadow: none;
 }
 
 .btn-publicar:disabled {
-  background-color: #a5b4fc;
+  background-color: rgba(27, 122, 74, 0.1);
+  border-color: #165e39;
+  color: #165e39;
+  text-shadow: none;
   cursor: not-allowed;
 }
 
 /* 2️⃣ Sección de Ordenamiento */
 .ordenamiento-container {
-  background: #f8fafc;
+  background: rgba(2, 14, 8, 0.92);
   padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 20px;
+  border-radius: 2px;
+  border: 1px solid #24b36b;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  letter-spacing: 1px;
 }
 
 .select-orden {
-  background-color: #fff;
+  background-color: #010805;
+  color: #5cffad;
+  border: 1px solid #24b36b;
+  border-radius: 2px;
+  padding: 6px 10px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
   font-size: 14px;
   outline: none;
   cursor: pointer;
 }
 
+.select-orden:focus {
+  border-color: #5cffad;
+  box-shadow: 0 0 8px rgba(57, 255, 156, 0.35);
+}
+
 /* 3️⃣ Sección de Publicaciones recientes y Paginación */
 .publicaciones-recientes > h3 {
   font-size: 20px;
-  margin-bottom: 16px;
-  color: #1e293b;
-  border-bottom: 2px solid #e2e8f0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  color: #5cffad;
+  border-bottom: 1px dashed #24b36b;
   padding-bottom: 8px;
+}
+
+.publicaciones-recientes > h3::before {
+  content: "[ LOGS ] ";
+  color: #24b36b;
 }
 
 .no-posts {
   text-align: center;
   padding: 30px;
-  background: #f8fafc;
-  border-radius: 8px;
-  color: #64748b;
+  background: rgba(3, 18, 11, 0.85);
+  border: 1px dashed #24b36b;
+  border-radius: 2px;
+  color: #24b36b;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 /* Botones de Paginación */
 .paginacion-container {
-  background: #ffffff;
+  background: rgba(3, 18, 11, 0.94);
   padding: 12px 20px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  margin-top: 20px;
+  border-radius: 2px;
+  border: 1px solid #24b36b;
+  margin-top: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .btn-paginacion {
-  background-color: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  border-radius: 6px;
-  font-weight: 600;
+  background-color: rgba(57, 255, 156, 0.1);
+  border: 1px solid #39ff9c;
+  color: #39ff9c;
+  padding: 6px 14px;
+  border-radius: 2px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-paginacion:hover:not(:disabled) {
-  background-color: #e2e8f0;
-  color: #0f172a;
+  background-color: #39ff9c;
+  color: #020a06;
+  box-shadow: 0 0 10px rgba(57, 255, 156, 0.6);
 }
 
 .btn-paginacion:disabled {
-  opacity: 0.5;
+  border-color: #165e39;
+  color: #165e39;
+  background: transparent;
   cursor: not-allowed;
-}
-.btn-admin {
-  display: inline-block;
-  background-color: #6c3483;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.2s;
-}
-
-.btn-admin:hover {
-  background-color: #512e5f;
 }
