@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Publicacion } from './publicaciones.schema';
 import { Usuario } from '../usuarios/usuario.schema';
+ import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class PublicacionesService {
@@ -162,28 +163,81 @@ export class PublicacionesService {
     };
   }
 
-  async toggleLike(postId: string, usuarioId: string) {
-    const objectPostId = new Types.ObjectId(postId);
-    const publicacion = await this.publicacionModel.findById(objectPostId);
-    
-    if (!publicacion) throw new NotFoundException('Publicación no encontrada');
+  
+// 
 
-    if (!publicacion.me_gusta) {
-      publicacion.me_gusta = [];
-    }
-
-    const index = publicacion.me_gusta.findIndex(
-      (id) => id.toString() === usuarioId.toString()
-    );
-
-    if (index > -1) {
-      publicacion.me_gusta.splice(index, 1);
-    } else {
-      publicacion.me_gusta.push(usuarioId as any);
-    }
-
-    return await publicacion.save();
+// POST: agregar Me gusta
+async agregarLike(postId: string, usuarioId: string) {
+  if (
+    !Types.ObjectId.isValid(postId) ||
+    !Types.ObjectId.isValid(usuarioId)
+  ) {
+    throw new BadRequestException('IDs inválidos');
   }
+
+  const objectPostId = new Types.ObjectId(postId);
+  const objectUsuarioId = new Types.ObjectId(usuarioId);
+
+  const publicacion = await this.publicacionModel.findOneAndUpdate(
+    {
+      _id: objectPostId,
+      activo: { $ne: false }
+    },
+    {
+      $addToSet: { me_gusta: objectUsuarioId }
+    },
+    { new: true }
+  );
+
+  if (!publicacion) {
+    throw new NotFoundException('Publicación no encontrada');
+  }
+
+  return publicacion;
+}
+
+// DELETE: quitar Me gusta
+async eliminarLike(postId: string, usuarioId: string) {
+  if (
+    !Types.ObjectId.isValid(postId) ||
+    !Types.ObjectId.isValid(usuarioId)
+  ) {
+    throw new BadRequestException('IDs inválidos');
+  }
+
+  const objectPostId = new Types.ObjectId(postId);
+  const objectUsuarioId = new Types.ObjectId(usuarioId);
+
+  const publicacion = await this.publicacionModel.findOneAndUpdate(
+    {
+      _id: objectPostId,
+      activo: { $ne: false },
+      me_gusta: objectUsuarioId
+    },
+    {
+      $pull: { me_gusta: objectUsuarioId }
+    },
+    { new: true }
+  );
+
+  if (publicacion) {
+    return publicacion;
+  }
+
+  const existe = await this.publicacionModel.exists({
+    _id: objectPostId,
+    activo: { $ne: false }
+  });
+
+  if (!existe) {
+    throw new NotFoundException('Publicación no encontrada');
+  }
+
+  throw new BadRequestException(
+    'No podés quitar un Me gusta que no realizaste previamente'
+  );
+}
+
 
   async eliminar(id: string, usuarioId: string) {
     const objectId = new Types.ObjectId(id);
