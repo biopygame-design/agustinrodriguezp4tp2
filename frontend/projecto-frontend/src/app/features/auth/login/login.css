@@ -94,3 +94,12 @@ button[type="submit"]:disabled {
 .redirect-text a:hover {
   text-decoration: underline;
 }
+:host {
+  display: block;
+  min-height: 100vh;
+  background-image: url('/assets/fondos/login.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
