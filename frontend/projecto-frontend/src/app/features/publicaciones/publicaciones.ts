@@ -5,11 +5,12 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/service/authservice/authservice';
 import { PublicacionesService } from '../../core/service/publicacionservice/publicacionservice';
 import { TarjetaPublicaciones } from './tarjeta.publicaciones/tarjeta-publicaciones';
+import { Resaltar } from '../../shared/directives/resaltar';
 
 @Component({
   selector: 'app-publicaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TarjetaPublicaciones],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TarjetaPublicaciones,Resaltar],
   templateUrl: './publicaciones.html',
   styleUrl: './publicaciones.css'
 })

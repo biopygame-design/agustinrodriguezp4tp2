@@ -1,61 +1,85 @@
-/* Contenedor principal centrado */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&display=swap');
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-image: url('/assets/fondos/login.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f6f9;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 20px 0;
+  background: transparent;
+  font-family: 'Cinzel', serif;
+  padding: 30px 20px;
+  box-sizing: border-box;
 }
 
-/* Tarjeta del formulario de registro */
 form {
-  background: #ffffff;
+  background: rgba(10, 8, 12, .92);
   padding: 30px 40px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #a77d36;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, .7),
+              0 0 15px rgba(201, 155, 69, .15);
   width: 100%;
   max-width: 450px;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(7px);
 }
 
-/* Título */
 form h2 {
-  margin-bottom: 20px;
-  color: #333333;
+  margin-bottom: 25px;
+  color: #e5c17b;
   text-align: center;
-  font-size: 24px;
+  font-size: 25px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
-/* Agrupador de campos */
 .form-group {
   margin-bottom: 14px;
   display: flex;
   flex-direction: column;
 }
 
-/* Inputs, textareas y selects */
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="date"],
 textarea,
 select.form-select {
-  padding: 10px 14px;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  padding: 11px 14px;
+  border: 1px solid #824039;
+  border-radius: 7px;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: .3s;
   width: 100%;
   box-sizing: border-box;
-  background-color: #fff;
+  background: rgba(255, 255, 255, .08);
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-input:focus, textarea:focus, select:focus {
-  border-color: #4f46e5;
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #e5c17b;
+  box-shadow: 0 0 8px rgba(229, 193, 123, .3);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #bdb5b5;
 }
 
 textarea {
@@ -63,56 +87,75 @@ textarea {
   min-height: 70px;
 }
 
-/* Etiquetas pequeñas */
-.form-label, .file-label, .form-label-small {
-  font-size: 13px;
-  font-weight: 600;
-  color: #555555;
-  margin-bottom: 5px;
+select.form-select option {
+  background: #171014;
+  color: white;
 }
 
-/* Input file custom */
+.form-label,
+.file-label,
+.form-label-small {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e5c17b;
+  margin-bottom: 6px;
+}
+
 input[type="file"] {
   font-size: 13px;
-  color: #555;
+  color: #ddd;
   padding: 5px 0;
 }
 
-/* Texto de error por campo */
-.error-text {
-  color: #dc2626;
-  font-size: 12px;
-  margin-top: 4px;
+input[type="file"]::file-selector-button {
+  background: linear-gradient(135deg, #8b1e1e, #450909);
+  color: white;
+  border: 1px solid #c99b45;
+  border-radius: 5px;
+  padding: 7px 12px;
+  margin-right: 10px;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
 }
 
-/* Botón de envío */
+.error-text {
+  display: block;
+  color: #ff7777;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
 button[type="submit"] {
-  background-color: #4f46e5;
+  background: linear-gradient(135deg, #8b1e1e, #450909);
   color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 13px;
+  border: 1px solid #c99b45;
+  border-radius: 7px;
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 10px;
+  transition: .3s;
+  margin-top: 12px;
 }
 
 button[type="submit"]:hover:not(:disabled) {
-  background-color: #4338ca;
+  background: linear-gradient(135deg, #b52a2a, #681010);
+  box-shadow: 0 0 15px rgba(201, 155, 69, .4);
+  transform: translateY(-2px);
 }
 
 button[type="submit"]:disabled {
-  background-color: #a5b4fc;
+  opacity: .5;
   cursor: not-allowed;
 }
 
-/* Alertas globales de error y éxito */
 .alert-error {
   margin-top: 14px;
-  background-color: #fee2e2;
-  color: #991b1b;
+  background: rgba(120, 20, 20, .35);
+  color: #ff9999;
+  border: 1px solid #a52a2a;
   padding: 10px;
   border-radius: 6px;
   font-size: 13px;
@@ -121,56 +164,54 @@ button[type="submit"]:disabled {
 
 .alert-success {
   margin-top: 14px;
-  background-color: #d1fae5;
-  color: #065f46;
+  background: rgba(20, 100, 50, .25);
+  color: #8ee5a5;
+  border: 1px solid #32834b;
   padding: 10px;
   border-radius: 6px;
   font-size: 13px;
   text-align: center;
 }
 
-/* Redirección al login */
 .redirect-text {
   margin-top: 18px;
   text-align: center;
   font-size: 14px;
-  color: #666666;
+  color: #ddd;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .redirect-text a {
-  color: #4f46e5;
+  color: #e5c17b;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .redirect-text a:hover {
+  color: white;
   text-decoration: underline;
 }
-/* Validaciones en tiempo real */
 
-/* Campo incorrecto */
 .form-group input.ng-invalid.ng-dirty,
 .form-group textarea.ng-invalid.ng-dirty {
   border: 1px solid #dc2626;
 }
 
-/* Campo correcto */
 .form-group input.ng-valid.ng-dirty,
 .form-group textarea.ng-valid.ng-dirty {
-  border: 1px solid #16a34a;
+  border: 1px solid #32834b;
 }
 
-/* Transición suave */
-.form-group input,
-.form-group textarea {
-  transition: border-color 0.2s ease;
-}
+@media (max-width: 600px) {
+  .auth-container {
+    padding: 20px 12px;
+  }
 
-/* Mensajes de error */
-.error-text {
-  display: block;
-  color: #dc2626;
-  font-size: 12px;
-  margin-top: 4px;
-  margin-left: 4px;
+  form {
+    padding: 25px 20px;
+  }
+
+  form h2 {
+    font-size: 21px;
+  }
 }

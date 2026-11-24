@@ -1,22 +1,35 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&display=swap');
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-image: url('/assets/fondos/estadisticas.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 .dashboard-estadisticas {
   padding: 30px;
   max-width: 1200px;
   margin: 0 auto;
-  color: #222;
+  color: #f5f5f5;
+  font-family: 'Cinzel', serif;
 }
 
 .dashboard-estadisticas h1 {
   font-size: 28px;
   margin-bottom: 8px;
+  color: #e5c17b;
+  text-shadow: 0 2px 8px rgba(0,0,0,.8);
 }
 
 .subtitulo {
-  color: #777;
+  color: #ddd0b5;
   margin-bottom: 30px;
 }
-
-/* FILTROS */
 
 .filtros {
   display: flex;
@@ -24,9 +37,11 @@
   gap: 20px;
   flex-wrap: wrap;
   padding: 20px;
-  background: #f5f5f5;
+  background: rgba(12, 8, 12, .90);
+  border: 1px solid #a77d36;
   border-radius: 12px;
   margin-bottom: 30px;
+  backdrop-filter: blur(6px);
 }
 
 .campo {
@@ -36,70 +51,82 @@
 }
 
 .campo label {
-  font-weight: 600;
+  font-weight: 700;
+  color: #e5c17b;
 }
 
 .campo input {
   padding: 10px;
-  border: 1px solid #ccc;
+  background: rgba(255,255,255,.08);
+  color: white;
+  border: 1px solid #824039;
   border-radius: 7px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: #e5c17b;
+  box-shadow: 0 0 8px rgba(229,193,123,.3);
 }
 
 .filtros button {
   padding: 11px 20px;
-  border: none;
+  border: 1px solid #c99b45;
   border-radius: 7px;
-  background: #2563eb;
+  background: linear-gradient(135deg, #8b1e1e, #450909);
   color: white;
   cursor: pointer;
-  font-weight: bold;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+}
+
+.filtros button:hover {
+  background: linear-gradient(135deg, #b52a2a, #681010);
+  box-shadow: 0 0 12px rgba(201,155,69,.35);
 }
 
 .filtros button:disabled {
-  opacity: 0.6;
+  opacity: .6;
   cursor: not-allowed;
 }
 
-/* MENSAJES */
-
 .mensaje-error {
-  color: #dc2626;
-  font-weight: bold;
+  color: #ff7777;
+  font-weight: 700;
 }
 
 .cargando {
-  color: #2563eb;
-  font-weight: bold;
+  color: #e5c17b;
+  font-weight: 700;
 }
-
-/* RESUMEN */
 
 .resumen {
   margin-bottom: 30px;
 }
 
 .tarjeta-resumen {
-  background: #f0f7ff;
+  background: rgba(12, 8, 12, .90);
   padding: 20px;
   border-radius: 12px;
   max-width: 300px;
-  border: 1px solid #dbeafe;
+  border: 1px solid #c99b45;
+  box-shadow: 0 4px 18px rgba(0,0,0,.5);
+  backdrop-filter: blur(6px);
 }
 
 .tarjeta-resumen h3 {
   margin: 0 0 10px;
-  color: #555;
+  color: #e5c17b;
   font-size: 16px;
 }
 
 .tarjeta-resumen p {
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 700;
   margin: 0;
-  color: #2563eb;
+  color: #fff;
 }
-
-/* GRÁFICOS */
 
 .graficos {
   display: grid;
@@ -108,17 +135,19 @@
 }
 
 .grafico {
-  background: white;
+  background: rgba(12, 8, 12, .92);
   padding: 20px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(180, 55, 45, .75);
+  box-shadow: 0 4px 18px rgba(0,0,0,.5);
   min-width: 0;
+  backdrop-filter: blur(6px);
 }
 
 .grafico h2 {
   font-size: 18px;
   margin-bottom: 20px;
+  color: #e5c17b;
 }
 
 .contenedor-chart {
@@ -130,8 +159,6 @@
 .grafico-completo {
   grid-column: 1 / -1;
 }
-
-/* RESPONSIVE */
 
 @media (max-width: 768px) {
   .dashboard-estadisticas {

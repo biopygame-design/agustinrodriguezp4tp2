@@ -60,12 +60,12 @@
     </div>
 
     <!-- Bucle de tarjetas -->
-    <app-tarjeta-publicaciones 
-      *ngFor="let post of posts" 
-      [post]="post" 
-      (refresh)="cargarPublicaciones()">
-    </app-tarjeta-publicaciones>
-
+  <app-tarjeta-publicaciones
+  *ngFor="let post of posts"
+  [post]="post"
+  (refresh)="cargarPublicaciones()"
+  appResaltar>
+</app-tarjeta-publicaciones>
     <!-- 📄 BOTONES DE PAGINACIÓN -->
     <div class="paginacion-container" style="display: flex; justify-content: space-between; margin: 20px 0; align-items: center;">
       <button (click)="paginaAnterior()" [disabled]="offset === 0" class="btn-paginacion" style="padding: 8px 16px;">

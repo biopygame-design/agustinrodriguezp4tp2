@@ -1,52 +1,60 @@
-/* Contenedor principal de la vista de perfil */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&display=swap');
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-image: url('/assets/fondos/mi-perfil.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 .perfil-container {
   max-width: 800px;
   margin: 2rem auto;
   padding: 0 1.5rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+  font-family: 'Cinzel', serif;
+  color: #f5f5f5;
 }
 
-/* 🔹 Botón de Retorno */
 .perfil-nav {
   margin-bottom: 1.5rem;
 }
 
 .btn-volver {
+  display: inline-block;
   text-decoration: none;
-  color: #0066cc;
-  font-weight: 600;
-  transition: color 0.2s ease;
+  color: #e5c17b;
+  font-weight: 700;
+  transition: .3s;
 }
 
 .btn-volver:hover {
-  color: #004080;
-  text-decoration: underline;
+  color: white;
+  text-shadow: 0 0 10px #c99b45;
 }
 
-/* 🔹 Tarjeta de Datos Personales y Foto */
+.perfil-card,
+.post-card,
+.editar-perfil-card {
+  background: rgba(8, 15, 20, .90);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(70, 145, 170, .65);
+  box-shadow: 0 5px 22px rgba(0, 0, 0, .6);
+  backdrop-filter: blur(6px);
+}
+
 .perfil-card {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   gap: 2rem;
   margin-bottom: 2.5rem;
-  border: 1px solid #eaeaea;
 }
 
-/* Diseño responsivo para pantallas pequeñas */
-@media (max-width: 600px) {
-  .perfil-card {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-/* Contenedor y estilos de la foto de perfil */
 .avatar-container {
   flex-shrink: 0;
 }
@@ -56,117 +64,118 @@
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 3px solid #75b8d0;
+  box-shadow: 0 0 15px rgba(75, 170, 210, .4);
 }
 
-/* Información del usuario */
 .perfil-info {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: .4rem;
+}
+
+.perfil-info h2,
+.mis-publicaciones-section h3,
+.editar-perfil-card h3 {
+  color: #b9e7f5;
 }
 
 .perfil-info h2 {
   margin: 0;
   font-size: 1.8rem;
-  color: #111;
+  overflow-wrap: anywhere;
 }
 
 .username {
-  color: #666;
-  font-size: 0.95rem;
+  color: #75b8d0;
+  font-size: .95rem;
   margin: 0;
 }
 
 .email, .bio, .birth {
-  margin: 0.2rem 0;
-  font-size: 0.95rem;
-  color: #444;
+  margin: .2rem 0;
+  font-size: .95rem;
+  color: #e1e8eb;
+  overflow-wrap: anywhere;
 }
 
-/* 🔹 Sección de Publicaciones */
 .mis-publicaciones-section h3 {
   font-size: 1.4rem;
   margin-bottom: 1.2rem;
-  color: #222;
-  border-bottom: 2px solid #eaeaea;
-  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #548da3;
+  padding-bottom: .5rem;
 }
 
 .no-posts, .no-comments {
-  color: #777;
+  color: #c5d5dc;
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: .95rem;
 }
 
-/* Tarjeta individual de cada publicación */
 .post-card {
-  background: #ffffff;
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 1.5rem;
-  border: 1px solid #eaeaea;
 }
 
 .post-title {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 .5rem;
   font-size: 1.2rem;
-  color: #1a1a1a;
+  color: #b9e7f5;
+  overflow-wrap: anywhere;
 }
 
 .post-content {
-  margin: 0 0 0.8rem 0;
-  color: #555;
-  line-height: 1.5;
+  margin: 0 0 .8rem;
+  color: #eee;
+  line-height: 1.6;
+  font-family: 'Segoe UI', sans-serif;
+  overflow-wrap: anywhere;
 }
 
 .post-date {
-  font-size: 0.85rem;
-  color: #888;
+  font-size: .85rem;
+  color: #a9c3ce;
   display: block;
   margin-bottom: 1rem;
 }
 
-/* 🔹 Sub-sección de Comentarios */
 .comentarios-container {
-  background: #f9f9f9;
+  background: rgba(25, 45, 55, .8);
   padding: 1rem;
   border-radius: 6px;
   margin-top: 1rem;
-  border-left: 3px solid #0066cc;
+  border-left: 3px solid #75b8d0;
 }
 
 .comentarios-container h5 {
-  margin: 0 0 0.6rem 0;
-  font-size: 0.95rem;
-  color: #333;
+  margin: 0 0 .6rem;
+  font-size: .95rem;
+  color: #b9e7f5;
 }
 
 .comentario-item {
-  font-size: 0.9rem;
-  margin-bottom: 0.4rem;
+  font-size: .9rem;
+  margin-bottom: .4rem;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .comentario-autor {
-  font-weight: 600;
-  color: #0066cc;
-  margin-right: 0.4rem;
+  font-weight: 700;
+  color: #75b8d0;
+  margin-right: .4rem;
 }
 
 .comentario-texto {
-  color: #444;
+  color: #eee;
 }
 
-/* 🔹 Estado de carga */
 .loading-spinner {
   text-align: center;
   padding: 4rem;
   font-size: 1.1rem;
-  color: #666;
+  color: #b9e7f5;
 }
-/* 🔹 Control del tamaño de imágenes de publicaciones */
+
 .post-image-container {
   width: 100%;
   max-width: 350px;
@@ -182,31 +191,28 @@
   max-height: 250px;
   object-fit: contain;
   border-radius: 10px;
+  border: 1px solid #548da3;
 }
 
-/* Botón editar perfil */
 .btn-editar-perfil {
   margin-top: 15px;
   padding: 10px 20px;
-  background: #2563eb;
+  background: linear-gradient(135deg, #17627d, #092d3d);
   color: white;
-  border: none;
+  border: 1px solid #75b8d0;
   border-radius: 7px;
   cursor: pointer;
-  font-weight: bold;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
 }
 
 .btn-editar-perfil:hover {
-  background: #1d4ed8;
+  background: linear-gradient(135deg, #2385a5, #10465c);
+  box-shadow: 0 0 12px rgba(117, 184, 208, .4);
 }
 
-/* Formulario de edición */
 .editar-perfil-card {
-  background: white;
-  padding: 25px;
   margin: 25px 0;
-  border-radius: 12px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.10);
 }
 
 .editar-perfil-card h3 {
@@ -220,14 +226,17 @@
 }
 
 .editar-perfil-card label {
-  font-weight: bold;
+  color: #b9e7f5;
+  font-weight: 700;
   margin-bottom: 7px;
 }
 
 .editar-perfil-card input,
 .editar-perfil-card textarea {
   padding: 11px;
-  border: 1px solid #ccc;
+  background: rgba(255, 255, 255, .08);
+  color: white;
+  border: 1px solid #548da3;
   border-radius: 7px;
   font: inherit;
 }
@@ -235,11 +244,17 @@
 .editar-perfil-card input:focus,
 .editar-perfil-card textarea:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: #b9e7f5;
+  box-shadow: 0 0 8px rgba(117, 184, 208, .35);
+}
+
+.editar-perfil-card input::placeholder,
+.editar-perfil-card textarea::placeholder {
+  color: #b8c8ce;
 }
 
 .editar-perfil-card small {
-  color: #dc2626;
+  color: #ff7777;
   margin-top: 5px;
 }
 
@@ -247,39 +262,70 @@
   display: flex;
   gap: 12px;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .btn-guardar,
 .btn-cancelar {
   padding: 11px 20px;
-  border: none;
+  border: 1px solid #75b8d0;
   border-radius: 7px;
   cursor: pointer;
-  font-weight: bold;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
 }
 
 .btn-guardar {
-  background: #16a34a;
+  background: linear-gradient(135deg, #17627d, #092d3d);
   color: white;
 }
 
 .btn-cancelar {
-  background: #64748b;
+  background: rgba(60, 60, 60, .9);
   color: white;
+}
+
+.btn-guardar:hover,
+.btn-cancelar:hover {
+  filter: brightness(1.25);
 }
 
 .btn-guardar:disabled,
 .btn-cancelar:disabled {
-  opacity: 0.6;
+  opacity: .6;
   cursor: not-allowed;
 }
 
 .mensaje-error {
-  color: #dc2626;
+  color: #ff7777;
   margin-top: 12px;
 }
 
 .mensaje-exito {
-  color: #16a34a;
+  color: #8ee5a5;
   margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .perfil-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.3rem;
+  }
+
+  .perfil-container {
+    padding: 0 1rem;
+  }
+
+  .perfil-info h2 {
+    font-size: 1.4rem;
+  }
+
+  .editar-botones {
+    flex-direction: column;
+  }
+
+  .editar-botones button {
+    width: 100%;
+  }
 }
