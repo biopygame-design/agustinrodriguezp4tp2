@@ -1,14 +1,16 @@
 import { Component, inject, input, output } from '@angular/core';
 import { PublicacionesService } from '../../../core/service/publicacionservice/publicacionservice';
 import { AuthService } from '../../../core/service/authservice/authservice';
-import { DatePipe } from '@angular/common';
+
 import { ImagenUrlPipe } from '../../../pipes/imagen-url-pipe';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
+import { TextoCortoPipe } from '../../../shared/pipes/texto-corto-pipe';
+import { FechaRelativaPipe } from '../../../shared/pipes/fecha-relativa-pipe';
 @Component({
   selector: 'app-tarjeta-publicaciones',
   standalone: true,
-  imports: [DatePipe,ImagenUrlPipe,RouterLink],
+  imports: [ImagenUrlPipe,RouterLink,TextoCortoPipe,FechaRelativaPipe],
   styleUrl: './tarjeta-publicaciones.css',
   templateUrl: './tarjeta-publicaciones.html',
 })

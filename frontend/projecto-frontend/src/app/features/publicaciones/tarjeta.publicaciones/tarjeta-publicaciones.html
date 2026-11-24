@@ -3,12 +3,12 @@
   <!-- Cabecera de la publicación -->
   <div class="header">
     <strong>&#64;{{ post().usuario?.nombre || 'Usuario' }}</strong>
-    <span class="fecha">{{ post().createdAt | date:'short' }}</span>
+    <span class="fecha">{{ post().createdAt | fechaRelativa }}</span>
   </div>
 
   <!-- Contenido de texto -->
   <h4 class="titulo-publicacion">{{ post().titulo }}</h4>
-  <p>{{ post().descripcion }}</p>
+  <p>{{ post().descripcion | textoCorto:180 }}</p>
 
   <!-- 🖼️ Imagen de la publicación -->
   @if (post().imagen_publicacion) {
