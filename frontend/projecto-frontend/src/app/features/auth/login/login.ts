@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+
+import { Component, inject, signal, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/service/authservice/authservice';
-import { Injector } from '@angular/core';
 import { App } from '../../../app';
 
 @Component({
@@ -18,57 +18,102 @@ export class Login {
   private authService = inject(AuthService);
   private router = inject(Router);
   private injector = inject(Injector);
-  // Definimos isLoading y errorMessage como signals para la plantilla
+
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
 
   loginForm = this.fb.group({
-    identificador: ['', [Validators.required]], // correo o nombre de usuario
-    password: ['', [Validators.required]]       // contraseña
+    identificador: ['', [Validators.required]],
+    password: ['', [Validators.required]]
   });
 
   async onSubmit(): Promise<void> {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      this.errorMessage.set(
+        'Completá el correo o nombre de usuario y la contraseña.'
+      );
+      return;
+    }
 
     this.isLoading.set(true);
     this.errorMessage.set('');
 
     try {
       const { identificador, password } = this.loginForm.value;
-      
-      // Capturamos el resultado del servicio
-      const resultado = await this.authService.signIn(identificador!, password!);
 
-      // Si el servicio devolvió un error
+      const resultado = await this.authService.signIn(
+        identificador!,
+        password!
+      );
+
       if (resultado.error) {
-        this.errorMessage.set(resultado.error.message || 'Usuario o contraseña incorrectos');
-        return; 
+        const error = resultado.error as {
+          status?: number;
+          message?: string;
+        };
+
+        const status = error.status;
+        const mensaje = error.message;
+
+        if (status === 401) {
+          this.errorMessage.set(
+            'El correo, nombre de usuario o contraseña son incorrectos.'
+          );
+        } else if (status === 403) {
+          this.errorMessage.set(
+            'Tu cuenta está deshabilitada. Contactá a un administrador.'
+          );
+        } else if (status === 404) {
+          this.errorMessage.set(
+            'No se encontró una cuenta con esos datos.'
+          );
+        } else if (status === 400) {
+          this.errorMessage.set(
+            mensaje || 'Los datos ingresados no son válidos.'
+          );
+        } else if (status === 0) {
+          this.errorMessage.set(
+            'No se pudo conectar con el servidor. Verificá tu conexión.'
+          );
+        } else if (status && status >= 500) {
+          this.errorMessage.set(
+            'El servidor tuvo un problema. Intentá nuevamente más tarde.'
+          );
+        } else {
+          this.errorMessage.set(
+            mensaje || 'No se pudo iniciar sesión.'
+          );
+        }
+
+        return;
       }
 
-      // 🔍 Extraemos los datos del interior de 'resultado.data'
       const datos = resultado.data;
 
-      // Guardamos el token en el Local Storage
-      if (datos && datos.token) {
-        localStorage.setItem('token', datos.token);
-      }
-      
-      localStorage.setItem('sesion_activa', 'true');
-      
-      // Guardamos el objeto usuario si viene dentro de data
-      if (datos && datos.usuario) {
-        localStorage.setItem('usuario', JSON.stringify(datos.usuario));
+      if (!datos || !datos.token || !datos.usuario) {
+        this.errorMessage.set(
+          'El servidor no devolvió los datos necesarios para iniciar sesión.'
+        );
+        return;
       }
 
-      // Redirigimos al muro de publicaciones
-      this.router.navigate(['/publicaciones']).then(() => {
-    const app = this.injector.get(App);
-    app.validarSesion();
-});
-      
-    } catch (err) {
-      console.error('Error inesperado al iniciar sesión', err);
-      this.errorMessage.set('Ocurrió un error en el servidor');
+      localStorage.setItem('token', datos.token);
+      localStorage.setItem('sesion_activa', 'true');
+      localStorage.setItem('usuario', JSON.stringify(datos.usuario));
+
+      await this.router.navigate(['/publicaciones']);
+
+      const app = this.injector.get(App);
+      app.validarSesion();
+
+    } catch (err: any) {
+      console.error('Error al iniciar sesión:', err);
+
+      this.errorMessage.set(
+        err?.message || 'Ocurrió un error inesperado al iniciar sesión.'
+      );
+
     } finally {
       this.isLoading.set(false);
     }

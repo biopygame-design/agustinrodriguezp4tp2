@@ -147,21 +147,39 @@ export class PublicacionesService {
     return await nuevaPublicacion.save();
   }
 
-  async obtenerPerfilUsuario(id: string) {
-    const objectId = new Types.ObjectId(id);
-
-    const usuario = await this.usuarioModel.findById(objectId).select('-contrasena').lean().exec();
-    
-    const publicaciones = await this.publicacionModel.find({ usuario: objectId, activo: { $ne: false } })
-      .sort({ createdAt: -1 })
-      .lean()
-      .exec();
-
-    return {
-      usuario,
-      publicaciones
-    };
+  
+async obtenerPerfilUsuario(id: string) {
+  if (!Types.ObjectId.isValid(id)) {
+    throw new NotFoundException('ID de usuario inválido');
   }
+
+  const objectId = new Types.ObjectId(id);
+
+  const usuario = await this.usuarioModel
+    .findById(objectId)
+    .select('-contrasena')
+    .lean()
+    .exec();
+
+  if (!usuario) {
+    throw new NotFoundException('Usuario no encontrado');
+  }
+
+  const publicaciones = await this.publicacionModel
+    .find({
+      usuario: objectId,
+      activo: { $ne: false }
+    })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .lean()
+    .exec();
+
+  return {
+    usuario,
+    publicaciones
+  };
+}
 
   
 // 
