@@ -1,13 +1,11 @@
-/* Contenedor principal centrado en la pantalla */
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f6f9;
+  background: transparent;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 /* Tarjeta del formulario */
 form {
   background: #ffffff;
