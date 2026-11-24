@@ -15,7 +15,7 @@ import { finalize } from 'rxjs';
 export class TarjetaPublicaciones {
   post = input.required<any>();
   refresh = output<void>();
-  
+  mostrarModalEliminar = false;
   likeEnProceso = false;
 
   private publicacionesService = inject(PublicacionesService);
@@ -135,29 +135,35 @@ darLike(): void {
 }
 
 
-  eliminar(): void {
-    let currentUser = this.authService.currentUserData() as { _id?: string; id?: string };
-    
-    if (!currentUser) {
-      const savedUser = localStorage.getItem('usuario');
-      if (savedUser) {
-        try {
-          currentUser = JSON.parse(savedUser);
-        } catch (e) {
-          console.error('Error al parsear el usuario', e);
-        }
-      }
+  // Mostrar el modal de confirmación
+confirmarEliminar(): void {
+  this.mostrarModalEliminar = true;
+}
+
+// Cancelar eliminación
+cancelarEliminar(): void {
+  this.mostrarModalEliminar = false;
+}
+
+// Eliminar publicación después de confirmar
+eliminar(): void {
+  const currentUser = this.obtenerUsuarioActual();
+
+  const usuarioId = currentUser?._id || currentUser?.id;
+
+  if (!usuarioId) return;
+
+  const postId = this.post()._id || this.post().id;
+
+  this.publicacionesService.eliminar(postId, usuarioId).subscribe({
+    next: () => {
+      this.mostrarModalEliminar = false;
+      this.refresh.emit();
+    },
+    error: (err) => {
+      console.error('Error al eliminar:', err);
+      this.mostrarModalEliminar = false;
     }
-
-    const usuarioId = currentUser?._id || currentUser?.id;
-    if (!usuarioId) return;
-
-    const postId = this.post()._id || this.post().id;
-
-    // 👇 Pasamos el ID del usuario actual al servicio para que el backend valide el rol
-    this.publicacionesService.eliminar(postId, usuarioId).subscribe({
-      next: () => this.refresh.emit(),
-      error: (err) => console.error('Error al eliminar:', err)
-    });
-  }
+  });
+}
 }
