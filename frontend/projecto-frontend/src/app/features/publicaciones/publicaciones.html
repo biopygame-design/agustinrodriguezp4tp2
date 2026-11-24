@@ -1,55 +1,61 @@
+
 <div class="muro-container">
   <h2>Muro de Publicaciones</h2>
 
   <div class="acciones-nav">
 
-  <a routerLink="/miperfil" class="btn-perfil">
-    Mi Perfil
-  </a>
+    <a routerLink="/miperfil" class="btn-perfil">
+      Mi Perfil
+    </a>
 
-  <a
-  *appSoloAdmin="authService.currentUserData()?.rol"
-  routerLink="/admin/usuarios"
-  class="btn-admin">
-  Administrar usuarios
-</a>
-<a
-    *appSoloAdmin="authService.currentUserData()?.rol"
-    routerLink="/admin/estadisticas"
-    class="btn-admin">
-    Estadísticas
-  </a>
+    <a
+      *appSoloAdmin="authService.currentUserData()?.rol"
+      routerLink="/admin/usuarios"
+      class="btn-admin">
+      Administrar usuarios
+    </a>
 
-  <a
-  *appSoloAdmin="authService.currentUserData()?.rol"
-  routerLink="/admin/crear-usuario"
-  class="btn-admin">
-  Crear usuarios
-</a>
-</button>
+    <a
+      *appSoloAdmin="authService.currentUserData()?.rol"
+      routerLink="/admin/estadisticas"
+      class="btn-admin">
+      Estadísticas
+    </a>
 
-  <button (click)="onLogout()" class="btn-logout">
-    Cerrar Sesión
-  </button>
+    <a
+      *appSoloAdmin="authService.currentUserData()?.rol"
+      routerLink="/admin/crear-usuario"
+      class="btn-admin">
+      Crear usuarios
+    </a>
 
-</div>
+    <button (click)="onLogout()" class="btn-logout">
+      Cerrar Sesión
+    </button>
 
-  <!-- 1️⃣ FORMULARIO PARA CREAR PUBLICACIÓN -->
+  </div>
+
+  <!-- FORMULARIO PARA CREAR PUBLICACIÓN -->
   <div class="crear-post-card">
     <h3>¿Qué estás pensando?</h3>
-    
+
     <form [formGroup]="postForm" (ngSubmit)="crearPublicacion()">
+
       <div class="form-group">
         <input
-  type="text"
-  formControlName="titulo"
-  placeholder="Título..."
-  class="input-field"
-  appAutoFocus>
+          type="text"
+          formControlName="titulo"
+          placeholder="Título..."
+          class="input-field"
+          appAutoFocus>
       </div>
 
       <div class="form-group">
-        <textarea formControlName="descripcion" placeholder="Escribe tu contenido..." class="textarea-field"></textarea>
+        <textarea
+          formControlName="descripcion"
+          placeholder="Escribe tu contenido..."
+          class="textarea-field">
+        </textarea>
       </div>
 
       <div class="form-group file-group">
@@ -57,20 +63,37 @@
         <input type="file" (change)="onFileSelected($event)">
       </div>
 
-      <button type="submit" [disabled]="postForm.invalid" class="btn-publicar">Publicar</button>
+      <button
+        type="submit"
+        [disabled]="postForm.invalid"
+        class="btn-publicar">
+        Publicar
+      </button>
+
     </form>
   </div>
 
-  <!-- 2️⃣ SECCIÓN DE ORDENAMIENTO -->
+  <!-- ORDENAMIENTO -->
   <div class="ordenamiento-container" style="margin: 20px 0; display: flex; align-items: center;">
-    <label for="ordenSelect" style="margin-right: 10px; font-weight: bold;">Ordenar por:</label>
-    <select #selectOrden id="ordenSelect" [value]="ordenActual" (change)="cambiarOrden(selectOrden.value)" class="select-orden" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+    <label for="ordenSelect" style="margin-right: 10px; font-weight: bold;">
+      Ordenar por:
+    </label>
+
+    <select
+      #selectOrden
+      id="ordenSelect"
+      [value]="ordenActual"
+      (change)="cambiarOrden(selectOrden.value)"
+      class="select-orden"
+      style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+
       <option value="fecha">Más recientes (Fecha)</option>
       <option value="likes">Más populares (Me gusta)</option>
+
     </select>
   </div>
 
-  <!-- 3️⃣ SECCIÓN DE PUBLICACIONES RECIENTES -->
+  <!-- PUBLICACIONES RECIENTES -->
   <div class="publicaciones-recientes">
     <h3>Publicaciones recientes</h3>
 
@@ -78,25 +101,39 @@
       <p>Aún no hay publicaciones. ¡Sé el primero en compartir algo!</p>
     </div>
 
-    <!-- Bucle de tarjetas -->
-  <app-tarjeta-publicaciones
-  *ngFor="let post of posts"
-  [post]="post"
-  (refresh)="cargarPublicaciones()"
-  appResaltar>
-</app-tarjeta-publicaciones>
-    <!-- 📄 BOTONES DE PAGINACIÓN -->
-    <div class="paginacion-container" style="display: flex; justify-content: space-between; margin: 20px 0; align-items: center;">
-      <button (click)="paginaAnterior()" [disabled]="offset === 0" class="btn-paginacion" style="padding: 8px 16px;">
+    <!-- TARJETAS -->
+    <app-tarjeta-publicaciones
+      *ngFor="let post of posts"
+      [post]="post"
+      (refresh)="cargarPublicaciones()"
+      appResaltar>
+    </app-tarjeta-publicaciones>
+
+    <!-- PAGINACIÓN -->
+    <div
+      class="paginacion-container"
+      style="display: flex; justify-content: space-between; margin: 20px 0; align-items: center;">
+
+      <button
+        (click)="paginaAnterior()"
+        [disabled]="offset === 0"
+        class="btn-paginacion"
+        style="padding: 8px 16px;">
         ⬅️ Anterior
       </button>
-      
-      <span style="font-weight: bold;">Mostrando desde el registro {{ offset + 1 }}</span>
 
-      <button (click)="paginaSiguiente()" [disabled]="posts.length < limit" class="btn-paginacion" style="padding: 8px 16px;">
+      <span style="font-weight: bold;">
+        Mostrando desde el registro {{ offset + 1 }}
+      </span>
+
+      <button
+        (click)="paginaSiguiente()"
+        [disabled]="posts.length < limit"
+        class="btn-paginacion"
+        style="padding: 8px 16px;">
         Siguiente ➡️
       </button>
+
     </div>
   </div>
-
 </div>
