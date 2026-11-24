@@ -6,11 +6,13 @@ import { AuthService } from '../../core/service/authservice/authservice';
 import { PublicacionesService } from '../../core/service/publicacionservice/publicacionservice';
 import { TarjetaPublicaciones } from './tarjeta.publicaciones/tarjeta-publicaciones';
 import { Resaltar } from '../../shared/directives/resaltar';
+import { AutoFocus } from '../../shared/directives/auto-focus';
+import { SoloAdmin } from '../../shared/directives/solo-admin';
 
 @Component({
   selector: 'app-publicaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TarjetaPublicaciones,Resaltar],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TarjetaPublicaciones,Resaltar,AutoFocus,SoloAdmin],
   templateUrl: './publicaciones.html',
   styleUrl: './publicaciones.css'
 })

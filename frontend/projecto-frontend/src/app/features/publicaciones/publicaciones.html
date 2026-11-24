@@ -8,10 +8,16 @@
   </a>
 
   <a
-    *ngIf="authService.currentUserData()?.rol === 'admin'"
-    routerLink="/admin/usuarios"
+  *appSoloAdmin="authService.currentUserData()?.rol"
+  routerLink="/admin/usuarios"
+  class="btn-admin">
+  Administrar usuarios
+</a>
+<a
+    *appSoloAdmin="authService.currentUserData()?.rol"
+    routerLink="/admin/estadisticas"
     class="btn-admin">
-    Administrar usuarios
+    Estadísticas
   </a>
 
   <button (click)="onLogout()" class="btn-logout">
@@ -26,7 +32,12 @@
     
     <form [formGroup]="postForm" (ngSubmit)="crearPublicacion()">
       <div class="form-group">
-        <input type="text" formControlName="titulo" placeholder="Título..." class="input-field">
+        <input
+  type="text"
+  formControlName="titulo"
+  placeholder="Título..."
+  class="input-field"
+  appAutoFocus>
       </div>
 
       <div class="form-group">
