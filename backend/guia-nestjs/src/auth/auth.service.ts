@@ -134,54 +134,82 @@ export class AuthService {
   };
 }
 
-  async login(identificador: string, contrasenaPlana: string) {
-    // 🛡️ Validación preventiva por si algún campo llega vacío o undefined
-    if (!identificador || !contrasenaPlana) {
-      throw new BadRequestException('El correo/usuario y la contraseña son obligatorios');
-    }
-
-    // 1. Buscar el usuario permitiendo ingresar tanto el correo como el nombre de usuario
-    const usuario = await this.usuarioModel.findOne({ 
-      $or: [
-        { correo: identificador.trim().toLowerCase() },
-        { nombre_usuario: identificador.trim().toLowerCase() }
-      ]
-    });
-    
-    if (!usuario) {
-      throw new UnauthorizedException('Credenciales inválidas');
-    }
-    if (usuario.activo === false) {
-  throw new ForbiddenException(
-    'Tu cuenta está deshabilitada. Contactá a un administrador.'
-  );
-}
-
-    // 2. Comparar la contraseña ingresada con el hash de bcrypt
-    const esPasswordValida = await bcrypt.compare(contrasenaPlana, usuario.contrasena);
-    if (!esPasswordValida) {
-      throw new UnauthorizedException('Credenciales inválidas');
-    }
-
-    // 3. Retornar todos los datos del usuario requerido por la cátedra (excluyendo la contraseña)
-    const usuarioObj = usuario.toObject();
-    const { contrasena, ...resto } = usuarioObj;
-
-    // 🔑 Generar el token JWT con vigencia estricta de 15 minutos exigida por la cátedra
-    const payload = { 
-      sub: resto._id, 
-      correo: resto.correo, 
-      nombre_usuario: resto.nombre_usuario,
-      rol: resto.rol|| 'usuario' 
-    };
-    const token = await this.jwtService.signAsync(payload, { expiresIn: '3m' });
-
-    return {
-      mensaje: 'Login exitoso',
-      token, // 👈 El token que el frontend guardará localmente
-      usuario: resto,
-    };
+  
+async login(identificador: string, contrasenaPlana: string) {
+  if (!identificador?.trim() || !contrasenaPlana) {
+    throw new BadRequestException(
+      'Ingresá tu correo electrónico o nombre de usuario y tu contraseña.'
+    );
   }
+
+  const dato = identificador.trim().toLowerCase();
+
+  // Buscar primero por correo
+  let usuario = await this.usuarioModel.findOne({
+    correo: dato
+  });
+
+  // Si no existe, buscar por nombre de usuario
+  if (!usuario) {
+    usuario = await this.usuarioModel.findOne({
+      nombre_usuario: dato
+    });
+  }
+
+  // Si no existe por ninguno de los dos campos
+  if (!usuario) {
+    if (dato.includes('@')) {
+      throw new UnauthorizedException(
+        'No encontramos ninguna cuenta registrada con ese correo electrónico.'
+      );
+    }
+
+    throw new UnauthorizedException(
+      'No encontramos ese nombre de usuario. Verificá que esté escrito correctamente.'
+    );
+  }
+
+  // Comprobar si la cuenta está habilitada
+  if (usuario.activo === false) {
+    throw new ForbiddenException(
+      'Tu cuenta está deshabilitada. Contactá a un administrador.'
+    );
+  }
+
+  // Comprobar contraseña
+  const esPasswordValida = await bcrypt.compare(
+    contrasenaPlana,
+    usuario.contrasena
+  );
+
+  if (!esPasswordValida) {
+    throw new UnauthorizedException(
+      'La contraseña que ingresaste es incorrecta. Verificá e intentá nuevamente.'
+    );
+  }
+
+  // Preparar datos sin contraseña
+  const usuarioObj = usuario.toObject();
+  const { contrasena, ...resto } = usuarioObj;
+
+  // Generar JWT de 3 minutos (requisito de tu TP)
+  const payload = {
+    sub: resto._id,
+    correo: resto.correo,
+    nombre_usuario: resto.nombre_usuario,
+    rol: resto.rol || 'usuario'
+  };
+
+  const token = await this.jwtService.signAsync(payload, {
+    expiresIn: '3m'
+  });
+
+  return {
+    mensaje: '¡Bienvenido! Iniciaste sesión correctamente.',
+    token,
+    usuario: resto
+  };
+}
 
   // 🔄 Método para refrescar el token (emite uno nuevo con otros 15 minutos de vigencia)
   async refrescarToken(usuarioPayload: any) {

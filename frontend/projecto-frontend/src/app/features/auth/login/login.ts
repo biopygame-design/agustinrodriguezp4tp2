@@ -56,31 +56,12 @@ if (resultado.error) {
 
   const mensaje = error.message?.toLowerCase() || '';
 
-  if (error.status === 403) {
-    this.errorMessage.set(
-      'Tu cuenta está deshabilitada. Contactá a un administrador.'
-    );
-  } else if (error.status === 401) {
-    if (mensaje.includes('contraseña') || mensaje.includes('password')) {
-      this.errorMessage.set('La contraseña ingresada no es correcta.');
-    } else if (mensaje.includes('correo') || mensaje.includes('email')) {
-      this.errorMessage.set('No existe una cuenta asociada a ese correo electrónico.');
-    } else if (mensaje.includes('usuario')) {
-      this.errorMessage.set('No encontramos ese nombre de usuario.');
-    } else {
-      this.errorMessage.set('Los datos ingresados no coinciden con una cuenta.');
-    }
-  } else if (error.status === 404) {
-    this.errorMessage.set('No encontramos una cuenta con esos datos.');
-  } else if (error.status === 0) {
-    this.errorMessage.set('No pudimos conectarnos con el servidor.');
-  } else if (error.status && error.status >= 500) {
-    this.errorMessage.set('Estamos teniendo problemas con el servidor. Intentá más tarde.');
-  } else {
-    this.errorMessage.set(error.message || 'No se pudo iniciar sesión.');
-  }
-
+  if (resultado.error) {
+  this.errorMessage.set(
+    resultado.error.message || 'No se pudo iniciar sesión.'
+  );
   return;
+}
 }
 
 
