@@ -1,61 +1,70 @@
-/* Tarjeta contenedora principal estilo feed */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&display=swap');
+
 .tarjeta-publicacion {
-  background: #ffffff;
-  border: 1px solid #e1e8ed;
-  border-radius: 12px;
+  background: rgba(12, 10, 15, .88);
+  border: 1px solid rgba(201,155,69,.6);
+  border-radius: 10px;
   padding: 20px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   max-width: 600px;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: box-shadow 0.2s ease;
+  box-sizing: border-box;
+  box-shadow: 0 5px 20px rgba(0,0,0,.5);
+  font-family: 'Cinzel',serif;
+  color: white;
+  transition: .3s;
+  backdrop-filter: blur(5px);
 }
 
 .tarjeta-publicacion:hover {
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  border-color: #e5c17b;
+  box-shadow: 0 0 18px rgba(201,155,69,.25);
+  transform: translateY(-2px);
 }
 
-/* Cabecera (Autor y Fecha) */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
 }
 
 .header strong {
-  color: #0f1419;
-  font-size: 15px;
+  color: #e5c17b;
+  font-size: 14px;
 }
 
 .fecha {
-  color: #536471;
-  font-size: 13px;
+  color: #c5b9a7;
+  font-size: 12px;
 }
 
-/* Título y Descripción */
-.tarjeta-publicacion h4 {
-  margin: 0 0 8px 0;
-  color: #0f1419;
-  font-size: 18px;
-  font-weight: 600;
+.tarjeta-publicacion h4,
+.titulo-publicacion {
+  color: #e5c17b;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
 }
 
 .tarjeta-publicacion p {
-  margin: 0 0 14px 0;
-  color: #333333;
+  color: #eee;
+  font-family: 'Segoe UI',sans-serif;
   font-size: 15px;
-  line-height: 1.5;
-  word-break: break-word;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  overflow-wrap: anywhere;
 }
 
-/* Contenedor de la Imagen */
 .imagen-container {
   margin-bottom: 16px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #f7f9f9;
+  background: rgba(0,0,0,.4);
   display: flex;
   justify-content: center;
 }
@@ -68,65 +77,60 @@
   display: block;
 }
 
-/* Zona de Botones de Acción */
 .acciones {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
-  border-top: 1px solid #eff3f4;
-  padding-top: 12px;
-  margin-top: 8px;
+  border-top: 1px solid rgba(201,155,69,.35);
+  padding-top: 14px;
+  margin-top: 10px;
 }
 
-/* Botón general (Me gusta) */
 .acciones button {
-  background-color: #f7f9f9;
-  border: 1px solid #cfd9de;
-  color: #536471;
+  background: rgba(40,35,35,.9);
+  border: 1px solid #a77d36;
+  color: #e5c17b;
   padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  transition: .3s;
 }
 
 .acciones button:hover {
-  background-color: #fee2e2; /* Un leve tono rojizo al pasar por el like */
-  color: #e0245e;
-  border-color: #f9d9d9;
+  background: #762020;
+  color: white;
+  border-color: #e5c17b;
 }
 
-/* Botón específico de Eliminar */
 .btn-eliminar {
-  margin-left: auto; /* Lo empuja totalmente hacia la derecha */
-  background-color: #fff !important;
-  border-color: #fca5a5 !important;
-  color: #dc2626 !important;
+  margin-left: auto;
+  background: #651515 !important;
+  border-color: #b52a2a !important;
+  color: white !important;
 }
 
 .btn-eliminar:hover {
-  background-color: #fee2e2 !important;
-  border-color: #dc2626 !important;
-  color: #b91c1c !important;
+  background: #a51e1e !important;
 }
-/* Corazón normal */
+
 .acciones button .corazon {
-  color: #777;
+  color: #aaa;
   font-size: 18px;
   margin-right: 3px;
 }
 
-/* Corazón rojo cuando el usuario dio like */
 .acciones button.me-gusta-activo .corazon {
-  color: #e53935;
+  color: #ff4545;
 }
-.titulo-publicacion {
-  max-width: 100%;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  box-sizing: border-box;
+
+@media(max-width:600px) {
+  .tarjeta-publicacion {
+    padding: 15px;
+  }
+
+  .acciones {
+    gap: 8px;
+  }
 }

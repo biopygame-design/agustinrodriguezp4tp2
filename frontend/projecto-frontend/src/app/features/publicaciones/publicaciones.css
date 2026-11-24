@@ -267,6 +267,15 @@
   background: #9b2525;
   box-shadow: 0 0 12px rgba(201, 155, 69, 0.3);
 }
+:host {
+  display: block;
+  min-height: 100vh;
+  background-image: url('/assets/fondos/publicaciones.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 
 
 
@@ -287,13 +296,5 @@
   .acciones-nav {
     justify-content: center;
   }
-  :host {
-  display: block;
-  min-height: 100vh;
-  background-image: url('/assets/fondos/publicaciones.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
+  
 }
