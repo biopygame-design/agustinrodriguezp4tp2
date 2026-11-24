@@ -40,35 +40,45 @@ export class AuthService {
 
   // --- LOGIN ---
 // --- LOGIN ---
+
 async signIn(identificador: string, password: string) {
   try {
     const response: any = await firstValueFrom(
-      this.http.post(`${this.apiUrl}/login`, { identificador, password })
+      this.http.post(`${this.apiUrl}/login`, {
+        identificador,
+        password
+      })
     );
 
-    // Si el login es exitoso
     if (response && response.usuario) {
-  this.currentUserData.set(response.usuario);
+      this.currentUserData.set(response.usuario);
 
-  localStorage.setItem('usuario', JSON.stringify(response.usuario));
+      localStorage.setItem(
+        'usuario',
+        JSON.stringify(response.usuario)
+      );
 
-  // Guardar JWT para el interceptor
-  localStorage.setItem('token', response.token);
-}
-    return { data: response, error: null };
+      localStorage.setItem('token', response.token);
+    }
+
+    return {
+      data: response,
+      error: null
+    };
+
   } catch (error: any) {
-    // 🛡️ AQUÍ ESTÁ LA CLAVE: Capturamos el error HTTP que manda NestJS
-    console.error('❌ Error en el login:', error);
-    
-    // Extraemos el mensaje que envía NestJS (ej. 'Credenciales inválidas')
-    const errorMessage = error.error?.message || 'Usuario o contraseña incorrectos';
+    console.error('Error en el login:', error);
 
-    return { 
-      data: null, 
-      error: { message: errorMessage } 
+    return {
+      data: null,
+      error: {
+        status: error.status,
+        message: error.error?.message || 'Error inesperado al iniciar sesión'
+      }
     };
   }
 }
+
 
   // --- LOGOUT ---
   async signOut() {
