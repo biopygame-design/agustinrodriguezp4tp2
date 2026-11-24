@@ -26,15 +26,16 @@
     <button
   (click)="darLike()"
   [class.me-gusta-activo]="leDioLike()"
+  [disabled]="likeEnProceso"
   type="button">
 
   <span class="corazon">
     {{ leDioLike() ? '♥' : '♡' }}
   </span>
 
-  Me gusta ({{ post().me_gusta?.length || 0 }})
+  {{ likeEnProceso ? 'Procesando...' : 'Me gusta' }}
+  ({{ post().me_gusta?.length || 0 }})
 </button>
-    
     @if (puedeEliminar()) {
       <button (click)="eliminar()" class="btn-eliminar">🗑️ Eliminar</button>
     }

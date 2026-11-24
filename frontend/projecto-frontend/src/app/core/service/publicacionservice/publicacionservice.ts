@@ -52,9 +52,19 @@ export class PublicacionesService {
   }
 
   // ❤️ Dar o quitar Like
-  toggleLike(postId: string, usuarioId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/${postId}/like`, { usuarioId });
-  }
+  
+agregarLike(postId: string, usuarioId: string): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/${postId}/like`, {
+    usuarioId
+  });
+}
+
+eliminarLike(postId: string, usuarioId: string): Observable<any> {
+  return this.http.delete<any>(`${this.apiUrl}/${postId}/like`, {
+    body: { usuarioId }
+  });
+}
+
 
   // 🗑️ Eliminar (baja lógica)
   eliminar(idPublicacion: string, usuarioId: string): Observable<any> {

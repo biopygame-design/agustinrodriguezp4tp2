@@ -4,7 +4,7 @@ import { AuthService } from '../../../core/service/authservice/authservice';
 import { DatePipe } from '@angular/common';
 import { ImagenUrlPipe } from '../../../pipes/imagen-url-pipe';
 import { RouterLink } from '@angular/router';
-
+import { finalize } from 'rxjs';
 @Component({
   selector: 'app-tarjeta-publicaciones',
   standalone: true,
@@ -15,6 +15,8 @@ import { RouterLink } from '@angular/router';
 export class TarjetaPublicaciones {
   post = input.required<any>();
   refresh = output<void>();
+  
+  likeEnProceso = false;
 
   private publicacionesService = inject(PublicacionesService);
   private authService = inject(AuthService);
@@ -39,7 +41,6 @@ export class TarjetaPublicaciones {
     const rol = currentUser?.rol;
     
     const esAdmin = rol === 'admin' || rol === 'administrador';
-
     const postObj = this.post();
     const postUserId = postObj?.usuario?._id || postObj?.usuario;
 
@@ -47,34 +48,8 @@ export class TarjetaPublicaciones {
 
     return esAdmin || esDueño;
   }
-
-  darLike(): void {
-    let currentUser = this.authService.currentUserData() as { _id?: string; id?: string };
-    
-    if (!currentUser) {
-      const savedUser = localStorage.getItem('usuario');
-      if (savedUser) {
-        try {
-          currentUser = JSON.parse(savedUser);
-        } catch (e) {
-          console.error('Error al parsear el usuario del localStorage', e);
-        }
-      }
-    }
-
-
-    const usuarioId = currentUser?._id || currentUser?.id;
-    if (!usuarioId) return;
-
-    const postId = this.post()._id || this.post().id;
-
-    this.publicacionesService.toggleLike(postId, usuarioId).subscribe({
-      next: () => this.refresh.emit(),
-      error: (err) => console.error('❌ Error HTTP al dar like:', err)
-    });
-  }
-  leDioLike(): boolean {
-  let currentUser = this.authService.currentUserData() as { _id?: string; id?: string } | null;
+private obtenerUsuarioActual(): any {
+  let currentUser = this.authService.currentUserData();
 
   if (!currentUser) {
     const savedUser = localStorage.getItem('usuario');
@@ -83,10 +58,15 @@ export class TarjetaPublicaciones {
       try {
         currentUser = JSON.parse(savedUser);
       } catch (e) {
-        console.error('Error al recuperar el usuario', e);
+        console.error('Error al recuperar el usuario:', e);
       }
     }
   }
+
+  return currentUser;
+}
+leDioLike(): boolean {
+  const currentUser = this.obtenerUsuarioActual();
 
   const usuarioId = currentUser?._id || currentUser?.id;
 
@@ -98,7 +78,62 @@ export class TarjetaPublicaciones {
     const likeId = like?._id || like?.id || like;
     return String(likeId) === String(usuarioId);
   });
+}  
+
+  
+darLike(): void {
+  // Evita que se envíen varias peticiones simultáneas
+  if (this.likeEnProceso) return;
+
+  let currentUser = this.authService.currentUserData() as {
+    _id?: string;
+    id?: string;
+  } | null;
+
+  // Si no está en el signal, lo recuperamos del localStorage
+  if (!currentUser) {
+    const savedUser = localStorage.getItem('usuario');
+
+    if (savedUser) {
+      try {
+        currentUser = JSON.parse(savedUser);
+      } catch {
+        console.error('No se pudo recuperar el usuario');
+        return;
+      }
+    }
+  }
+
+  const usuarioId = currentUser?._id || currentUser?.id;
+  const postId = this.post()._id || this.post().id;
+
+  if (!usuarioId || !postId) return;
+
+  // Si ya tiene like, lo elimina. Si no, lo agrega.
+  const yaTieneLike = this.leDioLike();
+
+  this.likeEnProceso = true;
+
+  const peticion = yaTieneLike
+    ? this.publicacionesService.eliminarLike(postId, usuarioId)
+    : this.publicacionesService.agregarLike(postId, usuarioId);
+
+  peticion
+    .pipe(
+      finalize(() => {
+        this.likeEnProceso = false;
+      })
+    )
+    .subscribe({
+      next: () => {
+        this.refresh.emit();
+      },
+      error: (err) => {
+        console.error('Error al actualizar Me gusta:', err);
+      }
+    });
 }
+
 
   eliminar(): void {
     let currentUser = this.authService.currentUserData() as { _id?: string; id?: string };

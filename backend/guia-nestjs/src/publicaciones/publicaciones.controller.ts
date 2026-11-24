@@ -123,9 +123,20 @@ async comentariosPorPublicacion(
   }
 
   @Post(':id/like')
-  async toggleLike(@Param('id') id: string, @Body('usuarioId') usuarioId: string) {
-    return await this.publicacionesService.toggleLike(id, usuarioId);
-  }
+async agregarLike(
+  @Param('id') id: string,
+  @Body('usuarioId') usuarioId: string
+) {
+  return await this.publicacionesService.agregarLike(id, usuarioId);
+}
+
+@Delete(':id/like')
+async eliminarLike(
+  @Param('id') id: string,
+  @Body('usuarioId') usuarioId: string
+) {
+  return await this.publicacionesService.eliminarLike(id, usuarioId);
+}
 
   @Delete(':id')
   async eliminar(
