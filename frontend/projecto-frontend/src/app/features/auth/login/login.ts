@@ -47,47 +47,42 @@ export class Login {
         password!
       );
 
-      if (resultado.error) {
-        const error = resultado.error as {
-          status?: number;
-          message?: string;
-        };
+      
+if (resultado.error) {
+  const error = resultado.error as {
+    status?: number;
+    message?: string;
+  };
 
-        const status = error.status;
-        const mensaje = error.message;
+  const mensaje = error.message?.toLowerCase() || '';
 
-        if (status === 401) {
-          this.errorMessage.set(
-            'El correo, nombre de usuario o contraseña son incorrectos.'
-          );
-        } else if (status === 403) {
-          this.errorMessage.set(
-            'Tu cuenta está deshabilitada. Contactá a un administrador.'
-          );
-        } else if (status === 404) {
-          this.errorMessage.set(
-            'No se encontró una cuenta con esos datos.'
-          );
-        } else if (status === 400) {
-          this.errorMessage.set(
-            mensaje || 'Los datos ingresados no son válidos.'
-          );
-        } else if (status === 0) {
-          this.errorMessage.set(
-            'No se pudo conectar con el servidor. Verificá tu conexión.'
-          );
-        } else if (status && status >= 500) {
-          this.errorMessage.set(
-            'El servidor tuvo un problema. Intentá nuevamente más tarde.'
-          );
-        } else {
-          this.errorMessage.set(
-            mensaje || 'No se pudo iniciar sesión.'
-          );
-        }
+  if (error.status === 403) {
+    this.errorMessage.set(
+      'Tu cuenta está deshabilitada. Contactá a un administrador.'
+    );
+  } else if (error.status === 401) {
+    if (mensaje.includes('contraseña') || mensaje.includes('password')) {
+      this.errorMessage.set('La contraseña ingresada no es correcta.');
+    } else if (mensaje.includes('correo') || mensaje.includes('email')) {
+      this.errorMessage.set('No existe una cuenta asociada a ese correo electrónico.');
+    } else if (mensaje.includes('usuario')) {
+      this.errorMessage.set('No encontramos ese nombre de usuario.');
+    } else {
+      this.errorMessage.set('Los datos ingresados no coinciden con una cuenta.');
+    }
+  } else if (error.status === 404) {
+    this.errorMessage.set('No encontramos una cuenta con esos datos.');
+  } else if (error.status === 0) {
+    this.errorMessage.set('No pudimos conectarnos con el servidor.');
+  } else if (error.status && error.status >= 500) {
+    this.errorMessage.set('Estamos teniendo problemas con el servidor. Intentá más tarde.');
+  } else {
+    this.errorMessage.set(error.message || 'No se pudo iniciar sesión.');
+  }
 
-        return;
-      }
+  return;
+}
+
 
       const datos = resultado.data;
 
