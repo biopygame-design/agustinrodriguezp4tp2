@@ -37,8 +37,44 @@
   ({{ post().me_gusta?.length || 0 }})
 </button>
     @if (puedeEliminar()) {
-      <button (click)="eliminar()" class="btn-eliminar">🗑️ Eliminar</button>
+      <button (click)="confirmarEliminar()" class="btn-eliminar">
+  🗑️ Eliminar
+</button>
     }
   </div>
+  @if (mostrarModalEliminar) {
+  <div class="modal-overlay" (click)="cancelarEliminar()">
+
+    <div class="modal-confirmacion" (click)="$event.stopPropagation()">
+
+      <h2>¿Eliminar publicación?</h2>
+
+      <p>
+        ¿Estás seguro de que querés dar de baja esta publicación?
+        Esta acción también afectará sus comentarios.
+      </p>
+
+      <div class="modal-botones">
+
+        <button
+          class="btn-cancelar"
+          (click)="cancelarEliminar()"
+          type="button">
+          Cancelar
+        </button>
+
+        <button
+          class="btn-confirmar-eliminar"
+          (click)="eliminar()"
+          type="button">
+          Sí, eliminar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+}
 
 </div>
