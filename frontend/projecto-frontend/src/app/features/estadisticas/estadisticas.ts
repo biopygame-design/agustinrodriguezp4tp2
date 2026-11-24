@@ -1,14 +1,17 @@
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectorRef,
+  NgZone
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartData } from 'chart.js';
+import { ChartConfiguration, ChartData, Chart, registerables } from 'chart.js';
 import { PublicacionesService } from '../../core/service/publicacionservice/publicacionservice';
-import {
-  Chart,
-  registerables
-} from 'chart.js';
 
 @Component({
   selector: 'app-estadisticas',
@@ -20,6 +23,8 @@ import {
 export class Estadisticas implements OnInit {
 
   private publicacionesService = inject(PublicacionesService);
+  private cdr = inject(ChangeDetectorRef);
+  private zone = inject(NgZone);
 
   fechaInicio = '';
   fechaFin = '';
@@ -94,13 +99,15 @@ export class Estadisticas implements OnInit {
       }
     }
   };
+
   constructor() {
-  Chart.register(...registerables);
-}
+    Chart.register(...registerables);
+  }
 
   ngOnInit(): void {
     const hoy = new Date();
     const haceUnMes = new Date();
+
     haceUnMes.setMonth(haceUnMes.getMonth() - 1);
 
     this.fechaFin = this.formatearFecha(hoy);
@@ -138,10 +145,14 @@ export class Estadisticas implements OnInit {
       respuestas++;
 
       if (respuestas === 3) {
-        this.cargando = false;
+        this.zone.run(() => {
+          this.cargando = false;
+          this.cdr.detectChanges();
+        });
       }
     };
 
+    // Publicaciones por usuario
     this.publicacionesService
       .obtenerPublicacionesPorUsuario(this.fechaInicio, this.fechaFin)
       .subscribe({
@@ -158,6 +169,8 @@ export class Estadisticas implements OnInit {
               backgroundColor: '#3498db'
             }]
           };
+
+          this.cdr.detectChanges();
           finalizarCarga();
         },
         error: (err) => {
@@ -167,6 +180,7 @@ export class Estadisticas implements OnInit {
         }
       });
 
+    // Cantidad de comentarios
     this.publicacionesService
       .obtenerCantidadComentarios(this.fechaInicio, this.fechaFin)
       .subscribe({
@@ -180,6 +194,8 @@ export class Estadisticas implements OnInit {
               backgroundColor: ['#2ecc71']
             }]
           };
+
+          this.cdr.detectChanges();
           finalizarCarga();
         },
         error: (err) => {
@@ -189,6 +205,7 @@ export class Estadisticas implements OnInit {
         }
       });
 
+    // Comentarios por publicación
     this.publicacionesService
       .obtenerComentariosPorPublicacion(this.fechaInicio, this.fechaFin)
       .subscribe({
@@ -201,6 +218,8 @@ export class Estadisticas implements OnInit {
               backgroundColor: '#e67e22'
             }]
           };
+
+          this.cdr.detectChanges();
           finalizarCarga();
         },
         error: (err) => {
@@ -209,5 +228,7 @@ export class Estadisticas implements OnInit {
           finalizarCarga();
         }
       });
+
+    this.cdr.detectChanges();
   }
 }

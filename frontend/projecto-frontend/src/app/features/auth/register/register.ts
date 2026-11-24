@@ -1,5 +1,6 @@
 
 import { Component, inject, signal } from '@angular/core';
+
 import {
   AbstractControl,
   FormBuilder,
@@ -8,6 +9,7 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
+
 import { AuthService } from '../../../core/service/authservice/authservice';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -15,6 +17,7 @@ import { CommonModule } from '@angular/common';
 export const passwordMatchValidator: ValidatorFn = (
   control: AbstractControl
 ): ValidationErrors | null => {
+
   const password = control.get('password');
   const repetirPassword = control.get('repetir_password');
 
@@ -32,6 +35,7 @@ export const passwordMatchValidator: ValidatorFn = (
   templateUrl: './register.html',
 })
 export class Register {
+
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -44,9 +48,7 @@ export class Register {
     password: ['', [Validators.required, Validators.minLength(8)]],
     repetir_password: ['', [Validators.required]],
     fecha_nacimiento: ['', [Validators.required]],
-    descripcion_breve: ['', [Validators.maxLength(250)]],
-    perfil: ['usuario', [Validators.required]],
-    rol: ['usuario', Validators.required]
+    descripcion_breve: ['', [Validators.maxLength(250)]]
   }, { validators: passwordMatchValidator });
 
   isLoading = signal(false);
@@ -55,7 +57,6 @@ export class Register {
 
   selectedFile: File | null = null;
 
-  // Determina si hay que mostrar el error mientras escribe.
   mostrarError(campo: string): boolean {
     const control = this.registerForm.get(campo);
 
@@ -64,7 +65,6 @@ export class Register {
       (control.dirty || control.touched);
   }
 
-  // Devuelve el mensaje correspondiente a cada validación.
   obtenerMensajeError(campo: string): string {
     const control = this.registerForm.get(campo);
 
@@ -90,7 +90,6 @@ export class Register {
     return 'El valor ingresado no es válido.';
   }
 
-  // Validación en tiempo real de la confirmación.
   mostrarErrorPassword(): boolean {
     const repetir = this.registerForm.get('repetir_password');
 
@@ -110,6 +109,7 @@ export class Register {
   }
 
   async onSubmit() {
+
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
@@ -129,36 +129,38 @@ export class Register {
     formData.append('password', values.password!);
     formData.append('fecha_nacimiento', values.fecha_nacimiento!);
     formData.append('descripcion_breve', values.descripcion_breve || '');
-    formData.append('perfil', values.perfil!);
 
     if (this.selectedFile) {
       formData.append('imagen', this.selectedFile);
     }
 
-   try {
-  const { data, error } = await this.authService.register(formData);
+    try {
 
-  if (error) throw error;
+      const { error } = await this.authService.register(formData);
 
-  // Iniciar sesión automáticamente
-  const { data: loginData, error: loginError } =
-    await this.authService.signIn(
-      values.correo!,
-      values.password!
-    );
+      if (error) throw error;
 
-  if (loginError) throw loginError;
+      const { error: loginError } =
+        await this.authService.signIn(
+          values.correo!,
+          values.password!
+        );
 
-  this.successMessage.set('¡Registro exitoso!');
+      if (loginError) throw loginError;
 
-  this.registerForm.reset();
+      this.successMessage.set('¡Registro exitoso!');
 
-  await this.router.navigate(['/publicaciones']);
+      this.registerForm.reset();
+      this.selectedFile = null;
 
-} catch (error: any) {
+      await this.router.navigate(['/publicaciones']);
+
+    } catch (error: any) {
+
       this.errorMessage.set(
         error.message || 'Error al registrarse en el servidor'
       );
+
     } finally {
       this.isLoading.set(false);
     }

@@ -20,6 +20,14 @@
     Estadísticas
   </a>
 
+  <a
+  *appSoloAdmin="authService.currentUserData()?.rol"
+  routerLink="/admin/crear-usuario"
+  class="btn-admin">
+  Crear usuarios
+</a>
+</button>
+
   <button (click)="onLogout()" class="btn-logout">
     Cerrar Sesión
   </button>
